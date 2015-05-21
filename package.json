@@ -14,11 +14,14 @@
     "test": "node tests/index.js"
   },
   "dependencies": {
-    "tffileserver": "0.0.11",
-    "tfframework": "git+https://tfapps:tfapps888@bitbucket.org/twofront/tf-framework.git",
+    "browserify-middleware": "^5.0.2",
+    "connect": "^3.3.5",
+    "connect-static": "^1.5.0",
     "tfcommandline": "git+https://tfapps:tfapps888@bitbucket.org/twofront/tf-command-line.git",
-    "tflayout": "git+https://tfapps:tfapps888@bitbucket.org/twofront/tf-layout.git",
-    "tfdom": "git+https://tfapps:tfapps888@bitbucket.org/twofront/tf-dom.git"
+    "tfcss": "0.0.4",
+    "tfdom": "git+https://tfapps:tfapps888@bitbucket.org/twofront/tf-dom.git",
+    "tfframework": "git+https://tfapps:tfapps888@bitbucket.org/twofront/tf-framework.git",
+    "tflayout": "git+https://tfapps:tfapps888@bitbucket.org/twofront/tf-layout.git"
   },
   "jshintConfig": {
     "camelcase": true,
