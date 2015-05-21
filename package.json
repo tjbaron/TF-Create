@@ -1,0 +1,53 @@
+{
+  "name": "TFCreate",
+  "version": "0.0.1",
+  "description": "Vector software.",
+  "private": "true",
+  "author": "Thomas Baron <thomasjbaron@hotmail.com>",
+  "engine": "node 0.10.5",
+  "main": "index.js",
+  "bin": {
+    "tfunite": "index.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "node tests/index.js"
+  },
+  "dependencies": {
+    "tffileserver": "0.0.11",
+    "tfframework": "git+https://tfapps:tfapps888@bitbucket.org/twofront/tf-framework.git",
+    "tfcommandline": "git+https://tfapps:tfapps888@bitbucket.org/twofront/tf-command-line.git",
+    "tflayout": "git+https://tfapps:tfapps888@bitbucket.org/twofront/tf-layout.git",
+    "tfdom": "git+https://tfapps:tfapps888@bitbucket.org/twofront/tf-dom.git"
+  },
+  "jshintConfig": {
+    "camelcase": true,
+    "curly": false,
+    "eqeqeq": true,
+    "immed": true,
+    "latedef": "nofunc",
+    "newcap": true,
+    "noarg": true,
+    "noempty": true,
+    "nonew": true,
+    "plusplus": false,
+    "quotmark": "single",
+    "undef": true,
+    "unused": true,
+    "strict": false,
+    "trailing": true,
+    "maxparams": 4,
+    "maxdepth": 5,
+    "maxlen": 130,
+    "globalstrict": true,
+    "asi": false,
+    "eqnull": false,
+    "evil": false,
+    "laxbreak": false,
+    "laxcomma": false,
+    "loopfunc": true,
+    "devel": true,
+    "browser": true,
+    "node": true
+  }
+}
