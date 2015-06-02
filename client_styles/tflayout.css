@@ -1,20 +1,40 @@
 
+table {
+	font-family: sans-serif;
+	font-size: 14px;
+}
+
 .TFL-Table {
 	width: 100%;
+	color: black;
+	table-layout: fixed;
+	font-size: 14px;
+	cursor: pointer;
+}
+
+.TFL-Table {
+	width: 100%;
+	color: black;
+	table-layout: fixed;
+	font-size: 14px;
 	cursor: pointer;
 }
 
 .TFL-Column-Head {
-	font-size: 16px;
 	color: white;
+	font-size: 16px;
+	padding: 0px;
+}
+
+.TFL-Row {
+
 }
 
 .TFL-Column {
 	background: white;
-	padding: 8px;
+	padding: 5px;
 }
 
-.TFL-Column:active {
-	background: rgb(224,224,224);
-	padding: 8px;
+.Selected {
+	background: rgb(144,255,144);
 }

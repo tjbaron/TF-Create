@@ -1,11 +1,14 @@
 
-module.exports = exports = function() {
+var base = require('./baseobject');
+var extend = require('./extend');
+
+module.exports = exports = extend(function() {
 	this.properties = {
 		points: [],
 		width: 1.0
 	};
 	this.children = [];
-}
+}, base);
 
 exports.prototype.draw = function(ctx) {
 	var props = this.properties;
@@ -19,7 +22,5 @@ exports.prototype.draw = function(ctx) {
 	}
 	ctx.stroke();
 
-	for (var j=0; j<this.children.length; j++) {
-		this.children[j].draw(ctx);
-	}
+	this.super.draw();
 }

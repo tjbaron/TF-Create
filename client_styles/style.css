@@ -8,11 +8,6 @@ body {
 	-webkit-transition: background 1s;
 }
 
-table {
-	font-family: sans-serif;
-	font-size: 14px;
-}
-
 #title {
 	position: absolute; 
 	left: 50%; 
@@ -32,6 +27,7 @@ table {
 	top: -100%; height: 100%;
 	left: 160px; right: 300px;
 	background: rgb(224,224,224);
+	overflow: hidden;
 	-webkit-transition: top 1s;
 }
 
@@ -52,12 +48,17 @@ table {
 }
 
 #objectsList {
-
+	position: absolute;
+	right: -300px; width: 300px;
+	top: 0%; height: 50%;
+	overflow: auto;
+	-webkit-transition: right 1s;
 }
 
 #propertiesList {
 	position: absolute;
 	right: -300px; width: 300px;
-	top: 0px; height: 100%;
+	top: 50%; height: 50%;
+	overflow: auto;
 	-webkit-transition: right 1s;
 }

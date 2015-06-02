@@ -17,6 +17,7 @@
     "browserify-middleware": "^5.0.2",
     "connect": "^3.3.5",
     "connect-static": "^1.5.0",
+    "gl-matrix": "^2.1.0",
     "tfcommandline": "git+https://tfapps:tfapps888@bitbucket.org/twofront/tf-command-line.git",
     "tfcss": "0.0.4",
     "tfdom": "git+https://tfapps:tfapps888@bitbucket.org/twofront/tf-dom.git",
