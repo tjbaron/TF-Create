@@ -45,3 +45,7 @@ exports.prototype.emit = function(ev, p) {
 		this.listeners[ev][i](p);
 	}
 };
+
+exports.prototype.json = function() {
+	return JSON.stringify(this.activeScene.json());
+};

@@ -3,6 +3,7 @@ var base = require('./baseobject');
 var extend = require('./extend');
 
 module.exports = exports = extend(function() {
+	this.type = 'path';
 	this.properties = {
 		points: [],
 		width: 1.0

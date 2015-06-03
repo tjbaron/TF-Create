@@ -13,8 +13,10 @@ exports.init = function() {
 			{'type': 'text', 'value': 'Object Properties', 'stylesuffix': '-Head'}
 		]},
 		{'type': 'group', 'contents': [
-			{'type': 'text', 'value': 'Line Width', 'onclick': 'minus'},
-			{'type': 'text', 'value': 1, 'onclick': 'plus'}
+			{'type': 'row', 'contents': [
+				{'type': 'text', 'value': 'Line Width', 'onclick': 'minus'},
+				{'type': 'text', 'value': 1, 'onclick': 'plus'}
+			]}
 		]}
 	]));
 }

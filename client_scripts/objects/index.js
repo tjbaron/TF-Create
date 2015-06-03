@@ -9,11 +9,18 @@ exports.init = function() {
 		'styleprefix': 'TFL-'
 	});
 	appdata.tfplay.on('createObject', function() {
-		c = [{'type': 'header', 'contents': [{'type': 'text', 'value': 'Scene Objects', 'stylesuffix': '-Head'}]}];
+		var olist = [];
+		var c = [
+			{'type': 'header', 'contents': [
+				{'type': 'text', 'value': 'Scene Objects', 'stylesuffix': '-Head'}
+			]},
+			{type: 'input', search: 'Objects', stylesuffix: '-Head'},
+			{'type': 'group', id: 'Objects', 'select': true, 'oncontext': ['Rename','Duplicate','Delete'], 'contents': olist}
+		];
 		for (var i=0; i<appdata.tfplay.activeScene.children.length; i++) {
-			c.push({'type': 'text', 'value': i});
+			olist.push({'type': 'text', 'value': i});
 		}
 		objectsList.innerHTML = '';
-		objectsList.appendChild(objectsLayout.build([{'type': 'group', 'select': true, 'contents': c}]));
+		objectsList.appendChild(objectsLayout.build(c));
 	});
 }
