@@ -4,6 +4,11 @@ table {
 	font-size: 14px;
 }
 
+input {
+	box-sizing: border-box;
+	width: 100%;
+}
+
 .TFL-Table {
 	width: 100%;
 	color: black;
@@ -33,6 +38,10 @@ table {
 .TFL-Column {
 	background: white;
 	padding: 5px;
+}
+
+.TFL-Column:active {
+	background: rgb(224,224,224);
 }
 
 .Selected {

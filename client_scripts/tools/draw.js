@@ -5,7 +5,7 @@ var tfmouseposition = require('../tfmouseposition');
 exports.name = 'Draw';
 
 exports.properties = {
-	lineWidth: 1
+	lineWidth: 2
 };
 
 exports.ondown = function() {
@@ -17,10 +17,10 @@ exports.onmove = function(e) {
 	var newPos = tfmouseposition(e, d.tfplay.canvas);
 	if (d.activeObject) {
 		d.activeObject.properties.points.push(newPos);
-		d.tfplay.refresh();
+		d.tfplay.fastrefresh();
 	}
 }
 
 exports.onup = function() {
-
+	d.tfplay.refresh();
 }

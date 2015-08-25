@@ -1,8 +1,9 @@
 
 var d = require('../appdata');
+var properties = require('../properties');
 var TFLayout = require('tflayout');
+var JSZip = require('jszip');
 
-var activeTool = 0;
 var isDown = false;
 var tools = [
 	require('./empty'),
@@ -18,21 +19,37 @@ var tools = [
 ];
 
 exports.init = function() {
+	d.activeTool = tools[2];
+	
 	var toolsLayout = new TFLayout({
 		'styleprefix': 'TFL-'
 	});
 
 	toolsLayout.on('click', function(val) {
 		if (val === 'save') {
-			alert(d.tfplay.json());
+			//alert(d.tfplay.json());
+
+			var png = d.tfplay.canvas.toDataURL("image/png");
+			var zip = new JSZip();
+			var imgs = zip.folder('images');
+			imgs.file("0001.png", png.substr(22), {base64: true});
+			imgs.file("0002.png", png.substr(22), {base64: true});
+			var content = zip.generate({type:"base64"});
+
+			var a = document.createElement('a');
+			a.href = 'data:application.zip;base64,'+content;
+			a.download = 'images.zip';
+			a.click();
+			//alert(d.tfplay.canvas.toDataURL("image/png"));
 		} else {
-			activeTool = val;
+			d.activeTool = tools[val];
+			properties.viewTool();
 		}
 	});
 
 	var tlist = [];
 	var c = [
-		{type: 'input', search: ['MainpulateTools','CreateTools','Snapping','Commands'], stylesuffix: '-Head'},
+		{type: 'input', search: ['MainpulateTools','2DCreate','EffectsCreate','Snapping','Commands'], stylesuffix: '-Head'},
 		{type: 'header', contents: [
 			{type: 'text', value: 'Manipulation', stylesuffix: '-Head'}
 		]},
@@ -45,7 +62,13 @@ exports.init = function() {
 		{type: 'header', contents: [
 			{type: 'text', value: '2D Creation', stylesuffix: '-Head'}
 		]},
-		{type: 'group', id: 'CreateTools', select: true, contents: tlist},
+		{type: 'group', id: '2DCreate', select: true, contents: tlist},
+		{type: 'header', contents: [
+			{type: 'text', value: 'Effects Creation', stylesuffix: '-Head'}
+		]},
+		{type: 'group', id: 'EffectsCreate', contents: [
+			{'type': 'text', 'value': 'Color Cast'}
+		]},
 		{type: 'header', contents: [
 			{type: 'text', value: 'Snapping', stylesuffix: '-Head'}
 		]},
@@ -78,16 +101,16 @@ exports.init = function() {
 
 function down(e) {
 	isDown = true;
-	tools[activeTool].ondown(e);
+	d.activeTool.ondown(e);
 }
 
 function move(e) {
 	if (isDown) {
-		tools[activeTool].onmove(e);
+		d.activeTool.onmove(e);
 	}
 }
 
 function up(e) {
 	isDown = false;
-	tools[activeTool].onup(e);
+	d.activeTool.onup(e);
 }

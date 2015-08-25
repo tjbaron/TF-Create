@@ -12,7 +12,7 @@ module.exports = function() {
 			},
 			'body': {
 				'background': {
-					'default': 'rgb(48,48,48)',
+					'default': 'rgb(32,32,32)',
 					'duration': '1.0'
 				}
 			},
@@ -43,17 +43,17 @@ module.exports = function() {
 		},
 		{
 			'project': {
-				'body': {'background': 'rgb(96,96,96)'},
+				'body': {'background': 'rgb(48,48,48)'},
 				'mainArea': {'top': '0%'},
 				'toolsList': {'top': '0%'},
 				'objectsList': {'right': '0px'},
 				'propertiesList': {'right': '0px'}
 			},
 			'selecttransition': {
-				'body': {'background': 'rgb(48,48,48)'}
+				'body': {'background': 'rgb(32,32,32)'}
 			},
 			'selectproject': {
-				'body': {'background': 'rgb(48,48,48)'},
+				'body': {'background': 'rgb(32,32,32)'},
 				'title': {'opacity': '1.0'}
 			}
 		},

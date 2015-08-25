@@ -1,34 +1,30 @@
 
-var baseobject = require('./baseobject');
-var pathobject = require('./pathobject');
-var circleobject = require('./circleobject');
+var dom = require('tfdom');
+var objectHandler = require('./objectHandler');
 
 module.exports = exports = function(container) {
 	this.container = container;
-	this.canvas = document.createElement('canvas');
-	this.canvas.setAttribute('style', 'position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;');
-	this.canvas.width = container.offsetWidth*window.devicePixelRatio;
-	this.canvas.height = container.offsetHeight*window.devicePixelRatio;
-	container.appendChild(this.canvas);
+	this.canvas = dom.create('canvas', {
+		'style': 'position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;',
+		'width': container.offsetWidth*window.devicePixelRatio,
+		'height': container.offsetHeight*window.devicePixelRatio,
+		'parent': container
+	});
 
 	this.context = this.canvas.getContext('2d');
 	this.context.scale(window.devicePixelRatio,window.devicePixelRatio);
 
-	this.activeScene = new baseobject();
-	this.loadedScenes = {main: this.activeScene};
+	this.listeners = {};
 
-	this.listeners = {
-		createObject: []
-	};
+	this.activeScene = this.createObject();
+	this.loadedScenes = {main: this.activeScene};
 }
 
 exports.prototype.createObject = function(type) {
-	var o = null;
-	if (type === 'circle') o = new circleobject();
-	else o = new pathobject();
-	this.activeScene.children.push(o);
-	this.emit('createObject', o);
-	return o;
+	var obj = new objectHandler(type)
+	if (this.activeScene) this.activeScene.children.push(obj);
+	this.emit('createObject', obj);
+	return obj;
 };
 
 exports.prototype.refresh = function() {
@@ -36,11 +32,21 @@ exports.prototype.refresh = function() {
 	this.activeScene.draw(this.context);
 };
 
+exports.prototype.fastrefresh = function() {
+	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+	this.activeScene.draw(this.context, true);
+};
+
 exports.prototype.on = function(ev, cb) {
-	this.listeners[ev].push(cb);
+	if (this.listeners[ev]) {
+		this.listeners[ev].push(cb);
+	} else {
+		this.listeners[ev] = [cb];
+	}
 };
 
 exports.prototype.emit = function(ev, p) {
+	if (!this.listeners[ev]) return;
 	for (var i=0; i<this.listeners[ev].length; i++) {
 		this.listeners[ev][i](p);
 	}

@@ -9,6 +9,8 @@ var propertiesPane = require('./properties');
 
 objectsList = document.getElementById('objectsList');
 
+var KEY = {minus:189, plus:187};
+
 window.onload = function() {
 	appdata.init();
 	toolsPane.init();
@@ -23,8 +25,43 @@ window.onload = function() {
 
 	var lastPos = null;
 	document.body.ongesturechange = function(e) {
-		appdata.ctx.scale(e.scale,e.scale);
+		appdata.tfplay.context.scale(e.scale,e.scale);
+		appdata.tfplay.refresh();
 	}
+	window.onkeydown = function(e) {
+		if (e.keyCode === KEY.minus) {
+			appdata.tfplay.context.scale(0.95238,0.95238);
+			appdata.tfplay.refresh();
+		} else if (e.keyCode === KEY.plus) {
+			appdata.tfplay.context.scale(1.05,1.05);
+			appdata.tfplay.refresh();
+		}
+	}
+
+	document.body.addEventListener('dragover', cancel);
+    document.body.addEventListener('dragenter', cancel);
+	document.body.addEventListener('drop', function(e) {
+		var dt = e.dataTransfer;
+		var files = dt.files;
+		for (var i=0; i<files.length; i++) {
+			(function() {
+				var file = files[i];
+				var reader = new FileReader();
+				reader.readAsDataURL(file);
+				reader.addEventListener('loadend', function() {
+					/*var img = document.createElement('img');
+					img.src = reader.result;
+					img.setAttribute('style', 'position: absolute; top: 0px; left: 0px;');
+					document.body.appendChild(img);*/
+					var img = appdata.tfplay.createObject('image');
+					img.properties.image = new Image();
+					img.properties.image.src = reader.result;
+					appdata.tfplay.refresh();
+				});
+			})();
+		}
+		e.preventDefault();
+	});
 
 	/*function resizeCanvas() {
 		appdata.canvas.width = appdata.canvas.offsetWidth*window.devicePixelRatio;
@@ -36,3 +73,7 @@ window.onload = function() {
 	window.onresize = resizeCanvas;
 	setTimeout(resizeCanvas, 3500);*/
 };
+
+function cancel(e) {
+	e.preventDefault();
+}
