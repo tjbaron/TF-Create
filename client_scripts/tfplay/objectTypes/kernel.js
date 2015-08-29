@@ -1,17 +1,13 @@
 
 exports.setup = function() {
-	this.properties.kernel = [[0,0,0],[0,1,0],[0,0,0]];
+	this.properties.kernel = [1,0];
 	this.properties.scale = 1.0;
-	this.properties.offset = 1.0;
+	this.properties.offset = 0.0;
 }
 
 exports.draw = function(ctx) {
-	var r2 = 2*Math.pow(this.properties.radius, 2);
-	var weights = [];
-	for (var x=0; x<Math.ceil(this.properties.radius*3); x++) {
-		weights.push( (1/Math.pow(Math.PI*r2,0.5)) * Math.exp(-Math.pow(x,2)/r2) );
-		//console.log(weights[weights.length-1]);
-	}
+	var props = this.properties;
+	var kern = props.kernel;
 
 	var width = 1000;
 	var height = 1000;
@@ -22,22 +18,22 @@ exports.draw = function(ctx) {
 		var yoff = width*4*y;
 		for (var x=0; x<width; x++) {
 			var offset = yoff + (x*4);
-			var red = d[offset] * weights[0];
-			var green = d[offset+1] * weights[0];
-			var blue = d[offset+2] * weights[0];
-			var alpha = d[offset+3] * weights[0];
-			for (var i=1; i<weights.length; i++) {
+			var red = d[offset] * kern[0];
+			var green = d[offset+1] * kern[0];
+			var blue = d[offset+2] * kern[0];
+			var alpha = d[offset+3] * kern[0];
+			for (var i=1; i<kern.length; i++) {
 				if (x+i<width) {
-					red += d[offset+(i*4)] * weights[i];
-					green += d[offset+(i*4)+1] * weights[i];
-					blue += d[offset+(i*4)+2] * weights[i];
-					alpha += d[offset+(i*4)+3] * weights[i];
+					red += d[offset+(i*4)] * kern[i];
+					green += d[offset+(i*4)+1] * kern[i];
+					blue += d[offset+(i*4)+2] * kern[i];
+					alpha += d[offset+(i*4)+3] * kern[i];
 				}
 				if (x-i>=0) {
-					red += d[offset-(i*4)] * weights[i];
-					green += d[offset-(i*4)+1] * weights[i];
-					blue += d[offset-(i*4)+2] * weights[i];
-					alpha += d[offset-(i*4)+3] * weights[i];
+					red += d[offset-(i*4)] * kern[i];
+					green += d[offset-(i*4)+1] * kern[i];
+					blue += d[offset-(i*4)+2] * kern[i];
+					alpha += d[offset-(i*4)+3] * kern[i];
 				}
 			}
 			n[offset] = Math.floor(red);

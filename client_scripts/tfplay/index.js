@@ -5,6 +5,7 @@ var objectHandler = require('./objectHandler');
 module.exports = exports = function(container) {
 	this.container = container;
 	this.canvas = dom.create('canvas', {
+		'id': 'canvas',
 		'style': 'position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;',
 		'width': container.offsetWidth*window.devicePixelRatio,
 		'height': container.offsetHeight*window.devicePixelRatio,
