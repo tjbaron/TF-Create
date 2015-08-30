@@ -21,8 +21,8 @@ module.exports = exports = function(container) {
 	this.loadedScenes = {main: this.activeScene};
 }
 
-exports.prototype.createObject = function(type) {
-	var obj = new objectHandler(type)
+exports.prototype.createObject = function(type, props) {
+	var obj = new objectHandler(type, props)
 	if (this.activeScene) this.activeScene.children.push(obj);
 	this.emit('createObject', obj);
 	return obj;

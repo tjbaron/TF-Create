@@ -9,11 +9,27 @@ input {
 	width: 100%;
 }
 
+.TFL-Container {
+	position: absolute;
+	top: 0px; bottom: 0px;
+	left: 0px; right: 0px;
+	overflow: auto;
+}
+
 .TFL-Table {
 	width: 100%;
 	color: black;
 	table-layout: fixed;
 	font-size: 14px;
+	cursor: pointer;
+}
+
+.TFL-Header {
+	width: 100%;
+	color: black;
+	table-layout: fixed;
+	font-size: 14px;
+	background: rgb(48,48,48);
 	cursor: pointer;
 }
 
@@ -32,16 +48,15 @@ input {
 }
 
 .TFL-Row {
+	background: white;
+}
 
+.TFL-Row:active {
+	background: rgb(224,224,224);
 }
 
 .TFL-Column {
-	background: white;
 	padding: 5px;
-}
-
-.TFL-Column:active {
-	background: rgb(224,224,224);
 }
 
 .Selected {
@@ -49,6 +64,7 @@ input {
 }
 
 .TFL-Input-Head {
+	position: relative;
 	width: 100%;
 	-webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;

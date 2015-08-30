@@ -3,19 +3,30 @@ var objectTypes = {
 	base: require('./objectTypes/base'),
 	circle: require('./objectTypes/circle'),
 	path: require('./objectTypes/path'),
-	image: require('./objectTypes/image')
+	image: require('./objectTypes/image'),
+	edges: require('./objectTypes/edges'),
+	gaussian: require('./objectTypes/gaussian'),
+	grayscale: require('./objectTypes/grayscale'),
+	kernel: require('./objectTypes/kernel'),
+	clone: require('./objectTypes/clone')
 };
 
-module.exports = exports = function(type) {
+module.exports = exports = function(type, props) {
 	if (!type) type = 'base';
 	this.properties = {
 		position: [0.0,0.0],
 		rotation: 0.0,
 		scale: [1.0,1.0]
 	};
+	this.name = type;
 	this.children = [];
 	this.type = objectTypes[type];
 	if (objectTypes[type]) this.type.setup.call(this);
+	if (props) {
+		for (var e in props) {
+			this.properties[e] = props[e];
+		}
+	}
 };
 
 exports.prototype.draw = function(ctx, fast) {
