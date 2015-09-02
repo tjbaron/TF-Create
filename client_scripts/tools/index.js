@@ -21,7 +21,8 @@ var tools = [
 var effects = {
 	'Edge Detect': 'edges',
 	'Gaussian Blur': 'gaussian',
-	'Grayscale': 'grayscale'
+	'Grayscale': 'grayscale',
+	'Sharpen': 'sharpen'
 };
 
 exports.init = function() {
@@ -32,8 +33,8 @@ exports.init = function() {
 		'parent': toolsList
 	});
 
-	toolsLayout.on('click', function(val) {
-		if (val === 'save') {
+	toolsLayout.on('click', function(e) {
+		if (e.data === 'save') {
 			//alert(d.tfplay.json());
 
 			var png = d.tfplay.canvas.toDataURL("image/png");
@@ -47,13 +48,13 @@ exports.init = function() {
 			a.href = 'data:application.zip;base64,'+content;
 			a.download = 'images.zip';
 			a.click();
-		} else if (val === 'snap') {
+		} else if (e.data === 'snap') {
 			d.snap = !d.snap;
-		} else if (effects[val]) {
-			d.tfplay.createObject(effects[val]);
+		} else if (effects[e.data]) {
+			d.tfplay.createObject(effects[e.data]);
 			d.tfplay.refresh();
 		} else {
-			d.activeTool = tools[val];
+			d.activeTool = tools[e.data];
 			properties.viewTool();
 		}
 	});

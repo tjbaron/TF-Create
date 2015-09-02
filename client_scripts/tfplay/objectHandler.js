@@ -8,6 +8,7 @@ var objectTypes = {
 	gaussian: require('./objectTypes/gaussian'),
 	grayscale: require('./objectTypes/grayscale'),
 	kernel: require('./objectTypes/kernel'),
+	sharpen: require('./objectTypes/sharpen'),
 	clone: require('./objectTypes/clone')
 };
 

@@ -12,7 +12,7 @@ exports.init = function() {
 	});
 
 	objectsLayout.on('click', function(e) {
-		appdata.activeObject = appdata.tfplay.activeScene.children[e];
+		appdata.activeObject = appdata.tfplay.activeScene.children[e.data];
 		properties.refresh();
 	});
 

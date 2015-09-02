@@ -12,9 +12,8 @@ exports.init = function() {
 	propertiesLayout = new TFLayout({
 		'styleprefix': 'TFL-'
 	});
-	propertiesLayout.on('click', function(v) {
-		p[v]++;
-		props();
+	propertiesLayout.on('change', function(e) {
+		p[e.name] = e.value;
 		appdata.tfplay.refresh();
 	});
 }
@@ -34,9 +33,19 @@ exports.viewTool = function() {
 function props() {
 	var rows = [];
 	for (var e in p) {
+		var inp = null;
+		if (typeof(p[e]) === 'number') {
+			inp = {'type': 'input', 'subtype': 'number', 'name': e, 'value': p[e], 'onchange': true};
+		} else if (appdata.tfplay.enums[e]) {
+			inp = {'type': 'input', 'subtype': 'dropdown', 'options': appdata.tfplay.enums[e], 'name': e, 'value': p[e], 'onchange': true};
+		} else if (typeof(p[e]) === 'string') {
+			inp = {'type': 'input', 'subtype': 'text', 'name': e, 'value': p[e], 'onchange': true};
+		} else {
+			inp = {'type': 'text', 'value': p[e]};
+		}
 		rows.push({'type': 'row', 'contents': [
 			{'type': 'text', 'value': e},
-			{'type': 'text', 'value': p[e], 'onclick': e}
+			inp
 		]});
 	}
 
