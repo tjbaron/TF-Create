@@ -7,6 +7,7 @@ var objectTypes = {
 	edges: require('./objectTypes/edges'),
 	gaussian: require('./objectTypes/gaussian'),
 	grayscale: require('./objectTypes/grayscale'),
+	invert: require('./objectTypes/invert'),
 	kernel: require('./objectTypes/kernel'),
 	sharpen: require('./objectTypes/sharpen'),
 	clone: require('./objectTypes/clone')

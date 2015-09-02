@@ -22,6 +22,7 @@ var effects = {
 	'Edge Detect': 'edges',
 	'Gaussian Blur': 'gaussian',
 	'Grayscale': 'grayscale',
+	'Invert': 'invert',
 	'Sharpen': 'sharpen'
 };
 
@@ -89,11 +90,12 @@ exports.init = function() {
 			{'type': 'text', 'value': 'Point'}*/
 		]},
 		{type: 'header', contents: [
-			{type: 'text', value: 'Commands', stylesuffix: '-Head'}
+			{type: 'text', value: 'Exporting', stylesuffix: '-Head'}
 		]},
 		{type: 'group', id: 'Commands', contents: [
-			{'type': 'text', 'value': 'Save Scene', 'onclick': 'save'}/*,
-			{'type': 'text', 'value': 'Load Scene'},
+			{'type': 'text', 'value': 'PNG (Images)', 'onclick': 'save'},
+			{'type': 'text', 'value': 'SVG (Vectors)', 'onclick': 'save'}
+			/*{'type': 'text', 'value': 'Load Scene'},
 			{'type': 'text', 'value': 'Reduce Points'},
 			{'type': 'text', 'value': 'Merge Lines'},*/
 		]}
