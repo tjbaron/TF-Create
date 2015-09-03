@@ -45,10 +45,10 @@ exports.prototype.draw = function(ctx, fast) {
 			}
 		}
 	}
-	this.type.draw.call(this, ctx);
+	this.type.draw.call(this, ctx, fast);
 	for (var i=0; i<this.children.length; i++) {
 		this.children[i].draw(ctx, fast);
 	}
-	if (this.type.postdraw && !fast) this.type.postdraw.call(this, ctx);
+	if (this.type.postdraw) this.type.postdraw.call(this, ctx, fast);
 	ctx.restore();
 }

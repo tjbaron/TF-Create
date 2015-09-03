@@ -10,7 +10,7 @@ var tools = [
 	//require('./camera'),
 	require('./draw'),
 	require('./clone'),
-	//require('./line'),
+	require('./line'),
 	require('./circle'),
 	//require('./rectangle'),
 	//require('./shape'),
@@ -56,6 +56,9 @@ exports.init = function() {
 			d.tfplay.refresh();
 		} else {
 			d.activeTool = tools[e.data];
+			if (d.activeTool.onselect) {
+				d.activeTool.onselect();
+			}
 			properties.viewTool();
 		}
 	});
@@ -113,6 +116,7 @@ exports.init = function() {
 	d.tfplay.container.onmousedown = down;
 	document.body.onmousemove = move;
 	document.body.onmouseup = up;
+	document.body.onkeyup = keyup;
 }
 
 function down(e) {
@@ -128,5 +132,13 @@ function move(e) {
 
 function up(e) {
 	isDown = false;
-	d.activeTool.onup(e);
+	if (d.activeTool.onup) {
+		d.activeTool.onup(e);
+	}
+}
+
+function keyup(e) {
+	if (d.activeTool.onkey) {
+		d.activeTool.onkey(e.keyCode);
+	}
 }

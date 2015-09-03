@@ -8,13 +8,15 @@ exports.setup = function() {
 
 exports.draw = function(ctx) {
 	var p = this.properties;
+	var rad = Math.ceil(p.radius);
+	var x = p.center[0];
+	var y = p.center[1];
+	
+	var grd = ctx.createRadialGradient(x,y,0,x,y,rad);
+	grd.addColorStop(0,"rgba(0,0,0,1)");
+	grd.addColorStop(1,"rgba(0,0,0,0)");
 
-	ctx.beginPath();
-	ctx.arc(
-		p.center[0],
-		p.center[1],
-		p.radius,
-		0, 2 * Math.PI, false);
-	ctx.stroke();
+	ctx.fillStyle = grd;
+	ctx.fillRect(p.center[0]-rad, p.center[1]-rad, rad*2, rad*2);
 }
 
