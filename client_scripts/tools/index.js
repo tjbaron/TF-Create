@@ -23,6 +23,7 @@ var effects = {
 	'Gaussian Blur': 'gaussian',
 	'Grayscale': 'grayscale',
 	'Invert': 'invert',
+	'Levels': 'levels',
 	'Sharpen': 'sharpen'
 };
 

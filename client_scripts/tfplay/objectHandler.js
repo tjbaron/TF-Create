@@ -9,6 +9,7 @@ var objectTypes = {
 	grayscale: require('./objectTypes/grayscale'),
 	invert: require('./objectTypes/invert'),
 	kernel: require('./objectTypes/kernel'),
+	levels: require('./objectTypes/levels'),
 	sharpen: require('./objectTypes/sharpen'),
 	clone: require('./objectTypes/clone')
 };
