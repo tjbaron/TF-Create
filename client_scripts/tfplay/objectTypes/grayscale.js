@@ -6,7 +6,7 @@ exports.setup = function() {
 }
 
 exports.draw = function(ctx, fast) {
-	if (fast) return fastdraw.call(this, ctx);
+	if (hasSupport || fast) return fastdraw.call(this, ctx);
 	var d = ctx.getImageData(0, 0, this.canvas.width, this.canvas.height).data;
 	var sz = this.canvas.width*this.canvas.height*4;
 	for (var i=0; i<sz; i+=4) {
