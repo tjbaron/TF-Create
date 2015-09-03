@@ -34,8 +34,6 @@ function setMatrix(rad) {
 	return weights;
 }
 
-exports.draw = function(ctx) {
-	var s = (new Date()).getTime();
-	kernel.draw.call(this.kernel, ctx);
-	console.log((new Date()).getTime()-s);
+exports.draw = function(ctx, fast) {
+	kernel.draw.call(this.kernel, ctx, fast);
 }

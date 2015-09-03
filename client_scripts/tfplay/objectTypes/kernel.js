@@ -91,7 +91,8 @@ function setupShader(gl, matrixSize, alpha) {
 	return shaderProgram;
 }
 
-exports.draw = function(ctx) {
+exports.draw = function(ctx, fast) {
+	if (fast) return;
 	var canvas = document.getElementById('canvas');
 	var gl = this.gl;
 	var shaderProgram = this.shaderProgram;

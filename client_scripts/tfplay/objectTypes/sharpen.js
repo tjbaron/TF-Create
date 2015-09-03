@@ -8,6 +8,6 @@ exports.setup = function() {
 	this.kernel.properties.scale = 1.0;
 }
 
-exports.draw = function(ctx) {
-	kernel.draw.call(this.kernel, ctx);
+exports.draw = function(ctx, fast) {
+	kernel.draw.call(this.kernel, ctx, fast);
 }
