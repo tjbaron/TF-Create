@@ -49,6 +49,8 @@ exports.setup = function() {
 	this.kernel = [-1,-1,-1,-1,8,-1,-1,-1,-1];
 	this.shaderProgram = setupShader(this.gl, this.kernel.length, this.properties.alpha);
 
+	this.resolution = [canvas.width, canvas.height];
+
 	(function(that) {
 		Object.defineProperty(that.properties, 'kernel', {
 			set: function(x) {
@@ -93,14 +95,20 @@ function setupShader(gl, matrixSize, alpha) {
 
 exports.draw = function(ctx, fast) {
 	if (fast) return;
+
 	var canvas = document.getElementById('canvas');
+	var resolution = this.resolution;
 	var gl = this.gl;
 	var shaderProgram = this.shaderProgram;
 
-	var positionLocation = gl.getAttribLocation(shaderProgram, "a_position");
-	var texCoordLocation = gl.getAttribLocation(shaderProgram, "a_texCoord");
+	var texture = gl.createTexture();
+	gl.bindTexture(gl.TEXTURE_2D, texture);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
 
-	// provide texture coordinates for the rectangle.
 	var texCoordBuffer = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
@@ -110,43 +118,46 @@ exports.draw = function(ctx, fast) {
 		0,0,
 		1,1,
 		1,0]), gl.STATIC_DRAW);
+
+	var texCoordLocation = gl.getAttribLocation(shaderProgram, "a_texCoord");
 	gl.enableVertexAttribArray(texCoordLocation);
 	gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
 
-	var texture = gl.createTexture();
-	gl.bindTexture(gl.TEXTURE_2D, texture);
-
-	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-
-	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
+	// Pass data to vertex shader.
 
 	var resolutionLocation = gl.getUniformLocation(shaderProgram, "u_resolution");
-	var textureSizeLocation = gl.getUniformLocation(shaderProgram, "u_textureSize");
-	var kernelLocation = gl.getUniformLocation(shaderProgram, "u_kernel[0]");
-	var kernelWeightLocation = gl.getUniformLocation(shaderProgram, "u_kernelWeight");
+	gl.uniform2f(resolutionLocation, resolution[0], resolution[1]);
 
-	gl.uniform2f(resolutionLocation, 1000, 1000);
-	gl.uniform2f(textureSizeLocation, 1000, 1000);
+	// Pass data to fragment shader.
+
+	var textureSizeLocation = gl.getUniformLocation(shaderProgram, "u_textureSize");
+	gl.uniform2f(textureSizeLocation, resolution[0], resolution[1]);
+
+	var kernelLocation = gl.getUniformLocation(shaderProgram, "u_kernel[0]");
 	gl.uniform1fv(kernelLocation, this.kernel);
+
+	var kernelWeightLocation = gl.getUniformLocation(shaderProgram, "u_kernelWeight");
 	gl.uniform1f(kernelWeightLocation, this.properties.scale);
 
+	// Draw triangles.
 	var positionBuffer = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+	var positionLocation = gl.getAttribLocation(shaderProgram, "a_position");
 	gl.enableVertexAttribArray(positionLocation);
 	gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-	 0, 0,
-	 1000, 0,
-	 0, 1000,
-	 0, 1000,
-	 1000, 0,
-	 1000, 1000]), gl.STATIC_DRAW);
+		0, 0,
+		resolution[0], 0,
+		0, resolution[1],
+		0, resolution[1],
+		resolution[0], 0,
+		resolution[0], resolution[1]]), gl.STATIC_DRAW);
 
 	gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+	// Copy data to 2D canvas.
 
 	var data = new Uint8Array(canvas.width * canvas.height * 4);
 	gl.readPixels(0, 0, canvas.width, canvas.height, gl.RGBA, gl.UNSIGNED_BYTE, data);

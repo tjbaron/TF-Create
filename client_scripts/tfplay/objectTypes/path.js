@@ -21,7 +21,7 @@ exports.draw = function(ctx1, fast) {
 	var zoom = 0.5;
 	var p = this.properties;
 	var rad = p.width/2;
-	var zoomWidth = p.width/zoom;
+	var zoomWidth = 2*p.width/zoom;
 
 	var img = ctx2.createImageData(this.canvas.width,this.canvas.height);
 	var data = img.data;
@@ -29,28 +29,45 @@ exports.draw = function(ctx1, fast) {
 	var pnts = p.points;
 
 	var last = null;
-	for (var i=0; i<pnts.length; i++) {
-		var current = [pnts[i][0]/zoom, pnts[i][1]/zoom];
-		if (i !== 0) {
-			var ymin = ((last[1] < current[1] ? last[1] : current[1]) - zoomWidth);
-			var ymax = ((last[1] > current[1] ? last[1] : current[1]) + zoomWidth);
-			var xmin = ((last[0] < current[0] ? last[0] : current[0]) - zoomWidth);
-			var xmax = ((last[0] > current[0] ? last[0] : current[0]) + zoomWidth);
-			for (var y=ymin; y<ymax; y++) {
-				for (var x=xmin; x<xmax; x++) {
-					var d = distToSegment([x*zoom,y*zoom], pnts[i-1], pnts[i]) * zoom;
-					if (d<rad) {
+	for (var y=0; y<this.canvas.height; y++) {
+		for (var x=0; x<this.canvas.width; x++) {
+			var d = 999999;
+			for (var i=0; i<pnts.length; i++) {
+				var current = [pnts[i][0]/zoom, pnts[i][1]/zoom];
+				if (i !== 0) {
+					/*var ymin = ((last[1] < current[1] ? last[1] : current[1]) - zoomWidth);
+					var ymax = ((last[1] > current[1] ? last[1] : current[1]) + zoomWidth);
+					var xmin = ((last[0] < current[0] ? last[0] : current[0]) - zoomWidth);
+					var xmax = ((last[0] > current[0] ? last[0] : current[0]) + zoomWidth);*/
+					
+					var newDist = distToSegment([x*zoom,y*zoom], pnts[i-1], pnts[i]) * zoom;
+					/*if (d<rad) {
 						var pos = (((y*this.canvas.width)+x)*4) + 3;
 						var oldValue = data[pos];
 						var newValue = 255-Math.floor(255*d/rad);
 						if (newValue > oldValue) {
 							data[pos] = newValue;
 						}
-					}
+					} else if (d<p.width) {
+						var pos = (((y*this.canvas.width)+x)*4) + 3;
+						var oldValue = data[pos];
+						var newValue = Math.floor(255*d/p.width);
+						if (newValue > oldValue) {
+							data[pos] = newValue;
+						}
+					}*/
+					if (newDist < d) d = newDist
 				}
+				last = current;
+			}
+			if (d<rad) {
+				var pos = (((y*this.canvas.width)+x)*4) + 3;
+				data[pos] = 255 - Math.floor(255*d/p.width);
+			} else if (d<p.width) {
+				var pos = (((y*this.canvas.width)+x)*4) + 3;
+				data[pos] = Math.floor(255*d/p.width);
 			}
 		}
-		last = current;
 	}
 	ctx2.putImageData(img, 0, 0);
 
