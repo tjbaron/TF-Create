@@ -4,7 +4,7 @@ var objectHandler = require('./objectHandler');
 
 module.exports = exports = function(container) {
 	this.container = container;
-	this.canvas = dom.create('canvas', {
+	var canvas = this.canvas = dom.create('canvas', {
 		'id': 'canvas',
 		'style': 'position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;',
 		'width': container.offsetWidth*window.devicePixelRatio,
@@ -19,10 +19,23 @@ module.exports = exports = function(container) {
 
 	this.activeScene = this.createObject();
 	this.loadedScenes = {main: this.activeScene};
+
+	// A second 2D canvas and a WebGL canvas. These are shared between scene objects as temporary draw areas.
+	this.utils = {};
+	this.utils.canvas = dom.create('canvas', {
+		width: canvas.width,
+		height: canvas.height
+	});
+	this.utils.ctx = this.utils.canvas.getContext('2d');
+	this.utils.glcanvas = dom.create('canvas', {
+		width: canvas.width,
+		height: canvas.height
+	});
+	this.utils.gl = this.utils.glcanvas.getContext('webgl') || this.utils.glcanvas.getContext('experimental-webgl');
 }
 
 exports.prototype.createObject = function(type, props) {
-	var obj = new objectHandler(type, props)
+	var obj = new objectHandler(type, props, this.utils)
 	if (this.activeScene) this.activeScene.children.push(obj);
 	this.emit('createObject', obj);
 	return obj;
@@ -85,5 +98,9 @@ exports.prototype.enums = {
 		'saturation',
 		'color',
 		'luminosity'
+	],
+	'lineRenderer': [
+		'brush',
+		'pencil'
 	]
 };

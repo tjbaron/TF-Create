@@ -1,7 +1,6 @@
 
 var objectTypes = {
 	base: require('./objectTypes/base'),
-	brush: require('./objectTypes/brush'),
 	circle: require('./objectTypes/circle'),
 	path: require('./objectTypes/path'),
 	image: require('./objectTypes/image'),
@@ -15,7 +14,7 @@ var objectTypes = {
 	clone: require('./objectTypes/clone')
 };
 
-module.exports = exports = function(type, props) {
+module.exports = exports = function(type, props, utils) {
 	if (!type) type = 'base';
 	this.properties = {
 		position: [0.0,0.0],
@@ -25,7 +24,7 @@ module.exports = exports = function(type, props) {
 	this.name = type;
 	this.children = [];
 	this.type = objectTypes[type];
-	if (objectTypes[type]) this.type.setup.call(this);
+	if (objectTypes[type]) this.type.setup.call(this, utils);
 	if (props) {
 		for (var e in props) {
 			this.properties[e] = props[e];

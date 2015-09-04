@@ -10,7 +10,7 @@ exports.properties = {
 };
 
 exports.ondown = function() {
-	d.activeObject = d.tfplay.createObject('brush');
+	d.activeObject = d.tfplay.createObject('path');
 	d.activeObject.properties.width = exports.properties.lineWidth;
 }
 

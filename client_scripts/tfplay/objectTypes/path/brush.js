@@ -1,6 +1,4 @@
 
-var dom = require('tfdom');
-
 var vertSrc = '\
 attribute vec2 a_position;\
 uniform vec2 u_resolution;\
@@ -50,48 +48,12 @@ void main() {\
 }\
 ';
 
-exports.setup = function() {
-	this.properties.points = [];//[[0,0],[100,100],[200,100]];
-	
-	var canvas = document.getElementById('canvas');
-	this.glcanvas = dom.create('canvas', {
-		'width': canvas.width,
-		'height': canvas.height
-	});
-	this.gl = this.glcanvas.getContext('webgl') || this.glcanvas.getContext('experimental-webgl');
-
-	//this.shaderProgram = setupShader(this.gl, this.properties.alpha);
-
-	this.resolution = [canvas.width, canvas.height];
-}
-
-function setupShader(gl, pnts) {
-	var fragSrcGood = fragSrc
-		.replace('{{pointCount}}', pnts*2)
-		.replace('{{pointCount2}}', pnts*2);
-
-	var frag = gl.createShader(gl.FRAGMENT_SHADER);
-	gl.shaderSource(frag, fragSrcGood);
-	gl.compileShader(frag); 
-	var vert = gl.createShader(gl.VERTEX_SHADER);
-	gl.shaderSource(vert, vertSrc);
-	gl.compileShader(vert); 
-	
-	var shaderProgram = gl.createProgram();
-	gl.attachShader(shaderProgram, vert);
-	gl.attachShader(shaderProgram, frag);
-	gl.linkProgram(shaderProgram);
-	gl.useProgram(shaderProgram);
-	return shaderProgram;
-}
-
-exports.draw = function(ctx, fast) {
+module.exports = function(ctx) {
 	var start = (new Date()).getTime();
-	if (fast) return fastdraw.call(this, ctx);
 
 	var p = this.properties.points;
 	var canvas = document.getElementById('canvas');
-	var resolution = this.resolution;
+	var resolution = [this.glcanvas.width, this.glcanvas.height];
 	var zoom = 0.5;
 	var gl = this.gl;
 	var shaderProgram = setupShader(gl, p.length);//this.shaderProgram;
@@ -135,21 +97,26 @@ exports.draw = function(ctx, fast) {
 	ctx.scale(1/window.devicePixelRatio,1/window.devicePixelRatio);
 	ctx.drawImage(gl.canvas, 0, 0);
 	ctx.restore();
+
 	console.log((new Date()).getTime() - start);
 }
 
-function fastdraw(ctx) {
-	var p = this.properties;
-	ctx.lineWidth = p.width;
-	ctx.strokeStyle = 'rgb('+p.red*16+',0,0)';
-	ctx.lineCap = 'round';
-	ctx.lineJoin = 'round';
+function setupShader(gl, pnts) {
+	var fragSrcGood = fragSrc
+		.replace('{{pointCount}}', pnts*2)
+		.replace('{{pointCount2}}', pnts*2);
 
-	var pnts = p.points;
-	ctx.beginPath();
-	if (pnts.length > 0) ctx.moveTo(pnts[0][0],pnts[0][1]);
-	for (var i=1; i<pnts.length; i++) {
-		ctx.lineTo(pnts[i][0],pnts[i][1]);
-	}
-	ctx.stroke();
+	var frag = gl.createShader(gl.FRAGMENT_SHADER);
+	gl.shaderSource(frag, fragSrcGood);
+	gl.compileShader(frag); 
+	var vert = gl.createShader(gl.VERTEX_SHADER);
+	gl.shaderSource(vert, vertSrc);
+	gl.compileShader(vert); 
+	
+	var shaderProgram = gl.createProgram();
+	gl.attachShader(shaderProgram, vert);
+	gl.attachShader(shaderProgram, frag);
+	gl.linkProgram(shaderProgram);
+	gl.useProgram(shaderProgram);
+	return shaderProgram;
 }
