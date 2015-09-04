@@ -16,6 +16,7 @@ exports.setup = function() {
 }
 
 exports.draw = function(ctx1, fast) {
+	var start = (new Date()).getTime();
 	if (fast) return fastdraw.call(this, ctx1);
 	var ctx2 = this.tempcontext;
 	var zoom = 0.5;
@@ -35,27 +36,7 @@ exports.draw = function(ctx1, fast) {
 			for (var i=0; i<pnts.length; i++) {
 				var current = [pnts[i][0]/zoom, pnts[i][1]/zoom];
 				if (i !== 0) {
-					/*var ymin = ((last[1] < current[1] ? last[1] : current[1]) - zoomWidth);
-					var ymax = ((last[1] > current[1] ? last[1] : current[1]) + zoomWidth);
-					var xmin = ((last[0] < current[0] ? last[0] : current[0]) - zoomWidth);
-					var xmax = ((last[0] > current[0] ? last[0] : current[0]) + zoomWidth);*/
-					
 					var newDist = distToSegment([x*zoom,y*zoom], pnts[i-1], pnts[i]) * zoom;
-					/*if (d<rad) {
-						var pos = (((y*this.canvas.width)+x)*4) + 3;
-						var oldValue = data[pos];
-						var newValue = 255-Math.floor(255*d/rad);
-						if (newValue > oldValue) {
-							data[pos] = newValue;
-						}
-					} else if (d<p.width) {
-						var pos = (((y*this.canvas.width)+x)*4) + 3;
-						var oldValue = data[pos];
-						var newValue = Math.floor(255*d/p.width);
-						if (newValue > oldValue) {
-							data[pos] = newValue;
-						}
-					}*/
 					if (newDist < d) d = newDist
 				}
 				last = current;
@@ -75,6 +56,7 @@ exports.draw = function(ctx1, fast) {
 	ctx1.scale(1/window.devicePixelRatio,1/window.devicePixelRatio);
 	ctx1.drawImage(ctx2.canvas, 0, 0);
 	ctx1.restore();
+	console.log((new Date()).getTime() - start);
 }
 
 function fastdraw(ctx) {

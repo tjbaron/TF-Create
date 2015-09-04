@@ -1,6 +1,7 @@
 
 var objectTypes = {
 	base: require('./objectTypes/base'),
+	brush: require('./objectTypes/brush'),
 	circle: require('./objectTypes/circle'),
 	path: require('./objectTypes/path'),
 	image: require('./objectTypes/image'),
