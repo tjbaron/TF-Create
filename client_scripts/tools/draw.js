@@ -1,4 +1,5 @@
 
+var utils = require('../utils');
 var d = require('../appdata');
 var tfmouseposition = require('../tfmouseposition');
 
@@ -21,7 +22,7 @@ exports.onmove = function(e) {
 		var pnts = d.activeObject.properties.points;
 		if (pnts.length > 0) {
 			var last = pnts[pnts.length-1];
-			var dist = Math.pow( Math.pow(newPos[0]-last[0],2) + Math.pow(newPos[1]-last[1],2) , 0.5 );
+			var dist = utils.distance(newPos, last);
 			if (dist < exports.properties.minPointDistance) return;
 		}
 		pnts.push(newPos);

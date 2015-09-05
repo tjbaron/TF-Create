@@ -20,7 +20,6 @@ var tools = [
 	//require('./reference')
 ];
 var effects = {
-	'Brush': 'brush',
 	'Edge Detect': 'edges',
 	'Gaussian Blur': 'gaussian',
 	'Grayscale': 'grayscale',
