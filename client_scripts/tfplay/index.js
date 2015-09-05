@@ -43,13 +43,36 @@ exports.prototype.createObject = function(type, props) {
 
 exports.prototype.refresh = function() {
 	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
-	this.activeScene.draw(this.context);
+	if (this.backgroundData) {
+		this.context.putImageData(this.backgroundData,0,0);
+	}
+	this.activeScene.draw(this.context, {from: this.backgroundObject});
 };
 
 exports.prototype.fastrefresh = function() {
 	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
-	this.activeScene.draw(this.context, true);
+	if (this.backgroundData) {
+		this.context.putImageData(this.backgroundData,0,0);
+	}
+	this.activeScene.draw(this.context, {from: this.backgroundObject, fast: true});
 };
+
+exports.prototype.lockbackground = function(obj, useCurrent) {
+	if (useCurrent) {
+		this.backgroundData = this.context.getImageData(0,0,this.canvas.width,this.canvas.height);
+		this.backgroundObject = obj;
+		return;
+	}
+	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+	this.backgroundObject = null;
+	this.backgroundData = null;
+	if (obj) {
+		this.activeScene.draw(this.context, {to: obj});
+		this.backgroundData = this.context.getImageData(0,0,this.canvas.width,this.canvas.height);
+		this.backgroundObject = obj;
+	}
+	this.refresh();
+}
 
 exports.prototype.on = function(ev, cb) {
 	if (this.listeners[ev]) {

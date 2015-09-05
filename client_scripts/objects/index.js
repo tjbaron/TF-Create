@@ -13,6 +13,7 @@ exports.init = function() {
 
 	objectsLayout.on('click', function(e) {
 		appdata.activeObject = appdata.tfplay.activeScene.children[e.data];
+		appdata.tfplay.lockbackground(appdata.activeObject);
 		properties.refresh();
 	});
 

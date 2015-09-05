@@ -8,6 +8,7 @@ var isDown = false;
 var tools = [
 	//require('./empty'),
 	//require('./camera'),
+	require('./move'),
 	require('./draw'),
 	require('./clone'),
 	require('./line'),
@@ -68,13 +69,13 @@ exports.init = function() {
 	var tlist = [];
 	var elist = [];
 	var c = [
-		{type: 'input', search: ['MainpulateTools','2DCreate','EffectsCreate','Snapping','Commands'], stylesuffix: '-Head'},
+		{type: 'input', search: ['ManipulateTools','2DCreate','EffectsCreate','Snapping','Commands'], stylesuffix: '-Head'},
 		{type: 'header', contents: [
 			{type: 'text', value: 'Manipulation', stylesuffix: '-Head'}
 		]},
-		{type: 'group', id: 'MainpulateTools', contents: [
-			/*{'type': 'text', 'value': 'Select'},
-			{'type': 'text', 'value': 'Translate'},
+		{type: 'group', id: 'ManipulateTools', contents: [
+			//{'type': 'text', 'value': 'Move', 'onclick': 'move'}
+			/*{'type': 'text', 'value': 'Translate'},
 			{'type': 'text', 'value': 'Rotate'},
 			{'type': 'text', 'value': 'Move Pivot'}*/
 		]},

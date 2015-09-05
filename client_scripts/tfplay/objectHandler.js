@@ -14,6 +14,8 @@ var objectTypes = {
 	clone: require('./objectTypes/clone')
 };
 
+var nextId = 0;
+
 module.exports = exports = function(type, props, utils) {
 	if (!type) type = 'base';
 	this.properties = {
@@ -21,6 +23,7 @@ module.exports = exports = function(type, props, utils) {
 		rotation: 0.0,
 		scale: [1.0,1.0]
 	};
+	this.id = nextId;
 	this.name = type;
 	this.children = [];
 	this.type = objectTypes[type];
@@ -30,9 +33,14 @@ module.exports = exports = function(type, props, utils) {
 			this.properties[e] = props[e];
 		}
 	}
+	nextId++;
 };
 
-exports.prototype.draw = function(ctx, fast) {
+exports.prototype.draw = function(ctx, props) {
+	if ((props.to && props.to.id === this.id) || props.done) {
+		props.done = true;
+		return;
+	}
 	ctx.save();
 	ctx.scale(this.properties.scale[0], this.properties.scale[1]);
 	ctx.translate(this.properties.rotation, 0);
@@ -46,10 +54,11 @@ exports.prototype.draw = function(ctx, fast) {
 			}
 		}
 	}
-	this.type.draw.call(this, ctx, fast);
+	if (props.from && props.from.id === this.id) props.from = null;
+	if (!props.from) this.type.draw.call(this, ctx, props.fast);
 	for (var i=0; i<this.children.length; i++) {
-		this.children[i].draw(ctx, fast);
+		this.children[i].draw(ctx, props);
 	}
-	if (this.type.postdraw) this.type.postdraw.call(this, ctx, fast);
+	if (!props.from && this.type.postdraw) this.type.postdraw.call(this, ctx, props.fast);
 	ctx.restore();
 }

@@ -12,6 +12,7 @@ exports.properties = {
 exports.ondown = function() {
 	d.activeObject = d.tfplay.createObject('path');
 	d.activeObject.properties.width = exports.properties.lineWidth;
+	d.tfplay.lockbackground(d.activeObject, true);
 }
 
 exports.onmove = function(e) {

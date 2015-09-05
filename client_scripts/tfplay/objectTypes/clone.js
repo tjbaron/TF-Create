@@ -1,27 +1,20 @@
 
 var dom = require('tfdom');
 
-exports.setup = function() {
+exports.setup = function(utils) {
 	var p = this.properties;
 	p.width = 1.0;
 	p.points = [];
 	p.offsetX = 0;
 	p.offsetY = 0;
 
-	var canvas = this.canvas = document.getElementById('canvas');
-	var tempcanvas = this.tempcanvas = dom.create('canvas', {
-		//'style': 'position: absolute; top: 0px; left: 0px; width: '+canvas.width/4+'px; height: '+canvas.height/4+'px; border: 1px solid red;',
-		'width': canvas.width,
-		'height': canvas.height
-	});
-	var tempcontext = this.tempcontext = tempcanvas.getContext('2d');
-
-	//document.body.appendChild(tempcanvas);
+	this.canvas = utils.canvas;
+	this.ctx = utils.ctx;
 }
 
 exports.draw = function(ctx1) {
 	var p = this.properties;
-	var ctx2 = this.tempcontext;
+	var ctx2 = this.ctx;
 	
 	ctx2.clearRect(0,0,this.canvas.width,this.canvas.height);
 	ctx2.drawImage(ctx1.canvas, p.offsetX*window.devicePixelRatio, p.offsetY*window.devicePixelRatio);

@@ -49,8 +49,6 @@ void main() {\
 ';
 
 module.exports = function(ctx) {
-	var start = (new Date()).getTime();
-
 	var p = this.properties.points;
 	var canvas = document.getElementById('canvas');
 	var resolution = [this.glcanvas.width, this.glcanvas.height];
@@ -97,8 +95,6 @@ module.exports = function(ctx) {
 	ctx.scale(1/window.devicePixelRatio,1/window.devicePixelRatio);
 	ctx.drawImage(gl.canvas, 0, 0);
 	ctx.restore();
-
-	console.log((new Date()).getTime() - start);
 }
 
 function setupShader(gl, pnts) {
