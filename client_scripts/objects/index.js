@@ -8,6 +8,7 @@ var objectsLayout = null;
 
 exports.init = function() {
 	objectsLayout = new TFLayout({
+		'parent': objectsList,
 		'styleprefix': 'TFL-'
 	});
 
@@ -42,5 +43,5 @@ exports.refresh = function() {
 		olist.push({'type': 'text', 'value': ch[i].name, 'id': i, 'onclick': ''+i});
 	}
 	objectsList.innerHTML = '';
-	objectsList.appendChild(objectsLayout.build(c));
+	objectsLayout.build(c);
 };

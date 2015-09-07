@@ -5,14 +5,17 @@ var TFLayout = require('tflayout');
 var JSZip = require('jszip');
 
 var isDown = false;
+var manip = [
+	require('./move')
+];
 var tools = [
 	//require('./empty'),
 	//require('./camera'),
-	require('./move'),
 	require('./draw'),
 	require('./clone'),
 	require('./line'),
 	require('./circle'),
+	require('./lightautomation')
 	//require('./rectangle'),
 	//require('./shape'),
 	//require('./cog'),
@@ -56,6 +59,8 @@ exports.init = function() {
 		} else if (effects[e.data]) {
 			d.tfplay.createObject(effects[e.data]);
 			d.tfplay.refresh();
+		} else if (e.data === 'move') {
+			d.activeTool = manip[0];
 		} else {
 			d.activeTool = tools[e.data];
 			if (d.activeTool.onselect) {
@@ -65,46 +70,54 @@ exports.init = function() {
 		}
 	});
 
+	var mlist = [];
 	var tlist = [];
 	var elist = [];
 	var c = [
-		{type: 'input', search: ['ManipulateTools','2DCreate','EffectsCreate','Snapping','Commands'], stylesuffix: '-Head'},
+		{type: 'input', search: ['ManipulationTools', 'CreationTools','Effects','Snapping','Scene','Export'], stylesuffix: '-Head'},
+		// Manipulation Tools
 		{type: 'header', contents: [
-			{type: 'text', value: 'Manipulation', stylesuffix: '-Head'}
+			{type: 'text', value: 'Manipulation Tools', stylesuffix: '-Head'}
 		]},
-		{type: 'group', id: 'ManipulateTools', contents: [
-			//{'type': 'text', 'value': 'Move', 'onclick': 'move'}
-			/*{'type': 'text', 'value': 'Translate'},
-			{'type': 'text', 'value': 'Rotate'},
-			{'type': 'text', 'value': 'Move Pivot'}*/
-		]},
+		{type: 'group', id: 'ManipulationTools', contents: mlist},
+		// Creation Tools
 		{type: 'header', contents: [
-			{type: 'text', value: '2D Creation', stylesuffix: '-Head'}
+			{type: 'text', value: 'Creation Tools', stylesuffix: '-Head'}
 		]},
-		{type: 'group', id: '2DCreate', select: true, contents: tlist},
+		{type: 'group', id: 'CreationTools', select: true, contents: tlist},
+		// Effects
 		{type: 'header', contents: [
-			{type: 'text', value: 'Effects Creation', stylesuffix: '-Head'}
+			{type: 'text', value: 'Effects', stylesuffix: '-Head'}
 		]},
-		{type: 'group', id: 'EffectsCreate', contents: elist},
+		{type: 'group', id: 'Effects', contents: elist},
+		// Snapping
 		{type: 'header', contents: [
 			{type: 'text', value: 'Snapping', stylesuffix: '-Head'}
 		]},
 		{type: 'group', id: 'Snapping', multiselect: true, contents: [
-			{'type': 'text', 'value': 'Grid', 'onclick': 'snap'}/*,
-			{'type': 'text', 'value': 'Object'},
-			{'type': 'text', 'value': 'Point'}*/
+			{'type': 'text', 'value': 'Grid', 'onclick': 'snap'}
+		]},
+
+		{type: 'header', contents: [
+			{type: 'text', value: 'Scene', stylesuffix: '-Head'}
+		]},
+		{type: 'group', id: 'Scene', contents: [
+			{'type': 'text', 'value': 'Save', 'onclick': 'save'},
+			{'type': 'text', 'value': 'Load', 'onclick': 'save'}
 		]},
 		{type: 'header', contents: [
-			{type: 'text', value: 'Exporting', stylesuffix: '-Head'}
+			{type: 'text', value: 'Export', stylesuffix: '-Head'}
 		]},
-		{type: 'group', id: 'Commands', contents: [
+		{type: 'group', id: 'Export', contents: [
+			{'type': 'text', 'value': 'Scene File', 'onclick': 'save'},
 			{'type': 'text', 'value': 'PNG (Images)', 'onclick': 'save'},
 			{'type': 'text', 'value': 'SVG (Vectors)', 'onclick': 'save'}
-			/*{'type': 'text', 'value': 'Load Scene'},
-			{'type': 'text', 'value': 'Reduce Points'},
-			{'type': 'text', 'value': 'Merge Lines'},*/
 		]}
 	];
+	for (var i=0; i<manip.length; i++) {
+		var t = manip[i];
+		mlist.push({'type': 'text', 'value': t.name, 'onclick': 'move'});
+	}
 	for (var i=0; i<tools.length; i++) {
 		var t = tools[i];
 		tlist.push({'type': 'text', 'value': t.name, 'onclick': ''+i});

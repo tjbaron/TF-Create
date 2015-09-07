@@ -80,6 +80,6 @@ body {
 	top: 50%; height: 50%;
 	border-left: 1px solid black;
 	border-top: 1px solid black;
-	overflow: auto;
+	overflow: hidden;
 	-webkit-transition: right 1s;
 }

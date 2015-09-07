@@ -10,3 +10,7 @@ exports.Color = function(r,g,b,a) {
 exports.Color.prototype.generate = function() {
 	return 'rgba('+this.red+','+this.green+','+this.blue+','+this.alpha+')';
 };
+
+exports.Color.prototype.toString = function() {
+	return '<div style="float: left; margin-right: 5px; width: 16px; height: 16px; border: 1px solid black; background: '+this.generate()+'"></div> '+this.red+','+this.green+','+this.blue+','+this.alpha;
+};

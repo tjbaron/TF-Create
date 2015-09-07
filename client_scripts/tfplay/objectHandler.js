@@ -11,7 +11,8 @@ var objectTypes = {
 	kernel: require('./objectTypes/kernel'),
 	levels: require('./objectTypes/levels'),
 	sharpen: require('./objectTypes/sharpen'),
-	clone: require('./objectTypes/clone')
+	clone: require('./objectTypes/clone'),
+	lightcontroller: require('./objectTypes/lightcontroller')
 };
 
 var nextId = 0;
