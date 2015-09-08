@@ -1,5 +1,6 @@
 
 var objectTypes = {
+	audio: require('./objectTypes/audio'),
 	base: require('./objectTypes/base'),
 	circle: require('./objectTypes/circle'),
 	path: require('./objectTypes/path'),

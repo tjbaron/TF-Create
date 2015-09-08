@@ -49,14 +49,16 @@ window.onload = function() {
 				var reader = new FileReader();
 				reader.readAsDataURL(file);
 				reader.addEventListener('loadend', function() {
-					/*var img = document.createElement('img');
-					img.src = reader.result;
-					img.setAttribute('style', 'position: absolute; top: 0px; left: 0px;');
-					document.body.appendChild(img);*/
-					var img = appdata.tfplay.createObject('image');
-					img.properties.image = new Image();
-					img.properties.image.src = reader.result;
-					appdata.tfplay.refresh();
+					if (file.type.indexOf('audio') !== -1) {
+						var aud = appdata.tfplay.createObject('audio');
+						aud.properties.src = reader.result;
+						appdata.tfplay.refresh();
+					} else {
+						var img = appdata.tfplay.createObject('image');
+						img.properties.image = new Image();
+						img.properties.image.src = reader.result;
+						appdata.tfplay.refresh();
+					}
 				});
 			})();
 		}

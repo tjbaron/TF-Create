@@ -59,7 +59,8 @@ exports.setup = function() {
 			},
 			get: function() {
 				return that.kernel;
-			}
+			},
+			enumerable: true
 		});
 	})(this);
 }

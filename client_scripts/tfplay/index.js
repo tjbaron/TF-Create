@@ -125,5 +125,14 @@ exports.prototype.enums = {
 	'lineRenderer': [
 		'brush',
 		'pencil'
+	],
+	'playing': [
+		'true',
+		'false'
+	],
+	'lightType': [
+		'DMX',
+		'Hue',
+		'WeMo'
 	]
 };
