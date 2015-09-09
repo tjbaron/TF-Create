@@ -61,6 +61,10 @@ exports.init = function() {
 			d.tfplay.refresh();
 		} else if (e.data === 'move') {
 			d.activeTool = manip[0];
+			if (d.activeTool.onselect) {
+				d.activeTool.onselect();
+			}
+			properties.viewTool();
 		} else {
 			d.activeTool = tools[e.data];
 			if (d.activeTool.onselect) {

@@ -34,6 +34,7 @@ function startServer(err, res) {
 	connect.use('/', staticFiles);
 	connect.use('/bundle.js', browserify('client_scripts/index.js', process.env.DYNO ? browserify.settings.production : browserify.settings.development));
 	connect.use('/bundle.css', sendCSS);
+	connect.use('/hue/updateLight', updateLight);
 
 	var app = http.createServer(connect);
 	app.listen(process.env.PORT ? Number(process.env.PORT) : 8888);
@@ -42,6 +43,23 @@ function startServer(err, res) {
 function sendCSS(req, resp) {
 	resp.writeHead(200, {'Content-Type': 'text/css'});
 	resp.end(css);
+}
+
+function updateLight(req, resp) {
+	req.setEncoding('utf8');
+	req.on("data", function(chunk) {
+		var nr = http.request({
+			hostname: '10.0.1.2',
+			port: 80,
+			path: '/api/thomasbaron/lights/4/state',
+			method: 'PUT'
+		});
+		nr.write(chunk);
+		nr.end();
+
+		resp.writeHead(200, {'Content-Type': 'text/plain'});
+		resp.end('OK');
+	});
 }
 
 loadAssets();

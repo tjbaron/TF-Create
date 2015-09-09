@@ -59,7 +59,7 @@ exports.draw = function(ctx) {
 
 function update(that) {
 	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open("PUT", 'http://10.0.1.3/api/thomasbaron/lights/'+that.properties.lightNumber+'/state', true);
+	xmlhttp.open("POST", '/hue/updateLight', true);//that.properties.lightNumber
 	xmlhttp.onreadystatechange=function() {
 		if (xmlhttp.readyState==4 && xmlhttp.status==200) {
 			console.log(xmlhttp.responseText);

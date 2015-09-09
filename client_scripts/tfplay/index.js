@@ -134,5 +134,9 @@ exports.prototype.enums = {
 		'DMX',
 		'Hue',
 		'WeMo'
+	],
+	'falloffType': [
+		'path',
+		'direct'
 	]
 };
