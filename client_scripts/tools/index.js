@@ -78,7 +78,7 @@ exports.init = function() {
 	var tlist = [];
 	var elist = [];
 	var c = [
-		{type: 'input', search: ['ManipulationTools', 'CreationTools','Effects','Snapping','Scene','Export'], stylesuffix: '-Head'},
+		{type: 'input', search: ['ManipulationTools', 'CreationTools','Operations','Effects','Snapping','Scene','Export'], stylesuffix: '-Head'},
 		// Manipulation Tools
 		{type: 'header', contents: [
 			{type: 'text', value: 'Manipulation Tools', stylesuffix: '-Head'}
@@ -89,6 +89,13 @@ exports.init = function() {
 			{type: 'text', value: 'Creation Tools', stylesuffix: '-Head'}
 		]},
 		{type: 'group', id: 'CreationTools', select: true, contents: tlist},
+		// Operations
+		{type: 'header', contents: [
+			{type: 'text', value: 'Operations', stylesuffix: '-Head'}
+		]},
+		{type: 'group', id: 'Operations', contents: [
+			{'type': 'text', 'value': 'Reduce Points', 'onclick': 'reduce'}
+		]},
 		// Effects
 		{type: 'header', contents: [
 			{type: 'text', value: 'Effects', stylesuffix: '-Head'}

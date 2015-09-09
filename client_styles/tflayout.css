@@ -70,3 +70,7 @@ input {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
+
+.TFL-Context {
+	cursor: pointer;
+}
