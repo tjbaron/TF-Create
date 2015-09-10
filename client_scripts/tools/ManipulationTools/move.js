@@ -1,7 +1,7 @@
 
-var utils = require('../utils');
-var d = require('../appdata');
-var tfmouseposition = require('../tfmouseposition');
+var utils = require('../../utils');
+var d = require('../../appdata');
+var tfmouseposition = require('../../tfmouseposition');
 
 var lastPos = null;
 

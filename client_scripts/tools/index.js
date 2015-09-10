@@ -5,31 +5,58 @@ var TFLayout = require('tflayout');
 var JSZip = require('jszip');
 
 var isDown = false;
-var manip = [
-	require('./move')
+
+var lists = [
+	{
+		id: 'ManipulationTools',
+		name: 'Manipulation Tools',
+		children: [
+			require('./ManipulationTools/move'),
+			require('./ManipulationTools/smooth')
+		]
+	},
+	{
+		id: 'CreationTools',
+		name: 'Creation Tools',
+		children: [
+			require('./CreationTools/draw'),
+			require('./CreationTools/clone'),
+			require('./CreationTools/line'),
+			require('./CreationTools/circle'),
+			require('./CreationTools/lightautomation')
+		]
+	},
+	{
+		id: 'Operations',
+		name: 'Operations',
+		children: [
+			require('./Operations/reduce'),
+		]
+	},
+	{
+		id: 'Effects',
+		name: 'Effects',
+		children: [
+			{name: 'Edge Detect', createObject: 'edges'},
+			{name: 'Gaussian Blur', createObject: 'gaussian'},
+			{name: 'Grayscale', createObject: 'grayscale'},
+			{name: 'Invert', createObject: 'invert'},
+			{name: 'Levels', createObject: 'levels'},
+			{name: 'Sharpen', createObject: 'sharpen'}
+		]
+	}
 ];
+var toolLookup = {};
+
 var tools = [
 	//require('./empty'),
 	//require('./camera'),
-	require('./draw'),
-	require('./clone'),
-	require('./line'),
-	require('./circle'),
-	require('./lightautomation')
 	//require('./rectangle'),
 	//require('./shape'),
 	//require('./cog'),
 	//require('./text'),
 	//require('./reference')
 ];
-var effects = {
-	'Edge Detect': 'edges',
-	'Gaussian Blur': 'gaussian',
-	'Grayscale': 'grayscale',
-	'Invert': 'invert',
-	'Levels': 'levels',
-	'Sharpen': 'sharpen'
-};
 
 exports.init = function() {
 	d.activeTool = tools[2];
@@ -56,51 +83,43 @@ exports.init = function() {
 			a.click();
 		} else if (e.data === 'snap') {
 			d.snap = !d.snap;
-		} else if (effects[e.data]) {
-			d.tfplay.createObject(effects[e.data]);
-			d.tfplay.refresh();
-		} else if (e.data === 'move') {
-			d.activeTool = manip[0];
-			if (d.activeTool.onselect) {
-				d.activeTool.onselect();
+		} else if (toolLookup[e.data]) {
+			var t = toolLookup[e.data];
+			if (t.createObject) {
+				d.tfplay.createObject(t.createObject);
+				d.tfplay.refresh();
+			} else {
+				d.activeTool = t;
+				if (d.activeTool.onselect) {
+					d.activeTool.onselect();
+				}
+				properties.viewTool();
 			}
-			properties.viewTool();
-		} else {
-			d.activeTool = tools[e.data];
-			if (d.activeTool.onselect) {
-				d.activeTool.onselect();
-			}
-			properties.viewTool();
 		}
 	});
 
-	var mlist = [];
-	var tlist = [];
-	var elist = [];
 	var c = [
-		{type: 'input', search: ['ManipulationTools', 'CreationTools','Operations','Effects','Snapping','Scene','Export'], stylesuffix: '-Head'},
-		// Manipulation Tools
-		{type: 'header', contents: [
-			{type: 'text', value: 'Manipulation Tools', stylesuffix: '-Head'}
-		]},
-		{type: 'group', id: 'ManipulationTools', contents: mlist},
-		// Creation Tools
-		{type: 'header', contents: [
-			{type: 'text', value: 'Creation Tools', stylesuffix: '-Head'}
-		]},
-		{type: 'group', id: 'CreationTools', select: true, contents: tlist},
-		// Operations
-		{type: 'header', contents: [
-			{type: 'text', value: 'Operations', stylesuffix: '-Head'}
-		]},
-		{type: 'group', id: 'Operations', contents: [
-			{'type': 'text', 'value': 'Reduce Points', 'onclick': 'reduce'}
-		]},
-		// Effects
-		{type: 'header', contents: [
-			{type: 'text', value: 'Effects', stylesuffix: '-Head'}
-		]},
-		{type: 'group', id: 'Effects', contents: elist},
+		{type: 'input', search: ['ManipulationTools', 'CreationTools','Operations','Effects','Snapping','Scene','Export'], stylesuffix: '-Head'}
+	];
+
+	for (var i=0; i<lists.length; i++) {
+		var l = lists[i];
+		var t = [];
+
+		for (var j=0; j<l.children.length; j++) {
+			var child = l.children[j];
+			t.push({'type': 'text', 'value': child.name, 'onclick': child.name});
+			toolLookup[child.name] = child;
+		}
+
+		c.push({type: 'header', contents: [
+			{type: 'text', value: l.name, stylesuffix: '-Head'}
+		]});
+		c.push({type: 'group', id: l.id, contents: t});
+	}
+	d.activeTool = toolLookup['Draw'];
+
+	c.join([
 		// Snapping
 		{type: 'header', contents: [
 			{type: 'text', value: 'Snapping', stylesuffix: '-Head'}
@@ -124,18 +143,7 @@ exports.init = function() {
 			{'type': 'text', 'value': 'PNG (Images)', 'onclick': 'save'},
 			{'type': 'text', 'value': 'SVG (Vectors)', 'onclick': 'save'}
 		]}
-	];
-	for (var i=0; i<manip.length; i++) {
-		var t = manip[i];
-		mlist.push({'type': 'text', 'value': t.name, 'onclick': 'move'});
-	}
-	for (var i=0; i<tools.length; i++) {
-		var t = tools[i];
-		tlist.push({'type': 'text', 'value': t.name, 'onclick': ''+i});
-	}
-	for (var e in effects) {
-		elist.push({'type': 'text', 'value': e, 'onclick': e});
-	}
+	]);
 
 	toolsLayout.build(c);
 

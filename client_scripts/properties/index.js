@@ -4,6 +4,7 @@ var TFLayout = require('tflayout');
 var appdata = require('../appdata');
 
 var colorPicker = require('./colorPicker');
+var formulaBuilder = require('./formulaBuilder');
 
 var propertiesList = document.getElementById('propertiesList');
 var propertiesLayout;
@@ -23,6 +24,10 @@ exports.init = function() {
 	});
 	propertiesLayout.on('click', function(e) {
 		colorPicker();
+	});
+	propertiesLayout.on('context', function(e) {
+		console.log(e);
+		formulaBuilder();
 	});
 }
 

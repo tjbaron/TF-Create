@@ -83,3 +83,24 @@ body {
 	overflow: hidden;
 	-webkit-transition: right 1s;
 }
+
+#popover {
+	position: absolute;
+	top: 0px; bottom: 0px;
+	left: 0px; right: 0px;
+	background: rgba(0,0,0,0);
+	z-index: 100;
+	-webkit-transition: background 1s;
+}
+
+#popoverContainer {
+	position: absolute;
+	top: -50%; height: 100px;
+	left: 50%; width: 200px;
+	margin-left: -100px;
+	margin-top: -50px;
+	background: black;
+	border: 1px solid white;
+	z-index: 100;
+	-webkit-transition: top 1s;
+}

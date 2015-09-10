@@ -1,6 +1,6 @@
 
-var d = require('../appdata');
-var tfmouseposition = require('../tfmouseposition');
+var d = require('../../appdata');
+var tfmouseposition = require('../../tfmouseposition');
 
 exports.name = 'Circle';
 

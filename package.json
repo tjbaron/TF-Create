@@ -21,6 +21,7 @@
     "filesaver.js": "^0.2.0",
     "gl-matrix": "^2.1.0",
     "jszip": "^2.5.0",
+    "mathjs": "^2.2.0",
     "tfcommandline": "git+https://tfapps:tfapps888@bitbucket.org/twofront/tf-command-line.git",
     "tfcss": "0.0.4",
     "tfdom": "git+https://tfapps:tfapps888@bitbucket.org/twofront/tf-dom.git",

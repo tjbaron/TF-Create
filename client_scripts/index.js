@@ -18,10 +18,11 @@ window.onload = function() {
 	propertiesPane.init();
 
 	var sm = statemanagerinstance();
-	sm.setState('selectproject');
+	sm.setState('project');
+	/*sm.setState('selectproject');
 	setTimeout(function() {
 		sm.setState('project');
-	},2000);
+	},2000);*/
 
 	var lastPos = null;
 	document.body.ongesturechange = function(e) {
