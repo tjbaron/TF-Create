@@ -12,6 +12,7 @@ void main() {\
 var fragSrc = '\
 precision mediump float;\
 \
+uniform vec4 u_color;\
 uniform float u_points[{{pointCount}}];\
 \
 float sqr(float x) { return x * x; }\
@@ -39,9 +40,9 @@ void main() {\
 		if (newDist < dist) dist = newDist;\
 	}\
 	if (dist<10.0) {\
-		gl_FragColor = vec4(0,0,0,1.0-(dist/10.0));\
+		gl_FragColor = vec4(u_color.xyz,1.0-(dist/10.0));\
 	} else if (dist<20.0) {\
-		gl_FragColor = vec4(0,0,0,1);\
+		gl_FragColor = vec4(u_color.xyz,1);\
 	} else {\
 		gl_FragColor = vec4(0,0,0,0);\
 	}\
@@ -50,6 +51,7 @@ void main() {\
 
 module.exports = function(ctx) {
 	var p = this.properties.points;
+	var lc = this.properties.lineColor;
 	var canvas = document.getElementById('canvas');
 	var resolution = [this.glcanvas.width, this.glcanvas.height];
 	var zoom = 0.5;
@@ -70,6 +72,9 @@ module.exports = function(ctx) {
 		flat.push(resolution[1]-(p[i][1]/zoom));
 	}
 	gl.uniform1fv(pointsLocation, flat);
+
+	var colorLocation = gl.getUniformLocation(shaderProgram, "u_color");
+	gl.uniform4fv(colorLocation, [lc.red/255,lc.green/255,lc.blue/255,lc.alpha]);
 
 	// Draw triangles.
 	var positionBuffer = gl.createBuffer();
@@ -93,6 +98,7 @@ module.exports = function(ctx) {
 
 	ctx.save();
 	ctx.scale(1/window.devicePixelRatio,1/window.devicePixelRatio);
+	ctx.globalCompositeOperation = 'source-over';
 	ctx.drawImage(gl.canvas, 0, 0);
 	ctx.restore();
 }

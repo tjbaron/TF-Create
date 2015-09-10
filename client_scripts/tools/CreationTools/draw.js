@@ -2,10 +2,12 @@
 var utils = require('../../utils');
 var d = require('../../appdata');
 var tfmouseposition = require('../../tfmouseposition');
+var tfplay = require('../../tfplay');
 
 exports.name = 'Draw';
 
 exports.properties = {
+	lineColor: new tfplay.properties.Color(),
 	lineWidth: 10,
 	minPointDistance: 5
 };
@@ -13,6 +15,7 @@ exports.properties = {
 exports.ondown = function() {
 	d.activeObject = d.tfplay.createObject('path');
 	d.activeObject.properties.width = exports.properties.lineWidth;
+	d.activeObject.properties.lineColor = new tfplay.properties.Color(exports.properties.lineColor);
 	d.tfplay.lockbackground(d.activeObject, true);
 }
 

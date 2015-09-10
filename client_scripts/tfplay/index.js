@@ -2,7 +2,9 @@
 var dom = require('tfdom');
 var objectHandler = require('./objectHandler');
 
-module.exports = exports = function(container) {
+exports.properties = require('./properties');
+
+var Instance = exports.Instance = function(container) {
 	this.container = container;
 	var canvas = this.canvas = dom.create('canvas', {
 		'id': 'canvas',
@@ -34,14 +36,14 @@ module.exports = exports = function(container) {
 	this.utils.gl = this.utils.glcanvas.getContext('webgl') || this.utils.glcanvas.getContext('experimental-webgl');
 }
 
-exports.prototype.createObject = function(type, props) {
+Instance.prototype.createObject = function(type, props) {
 	var obj = new objectHandler(type, props, this.utils)
 	if (this.activeScene) this.activeScene.children.push(obj);
 	this.emit('createObject', obj);
 	return obj;
 };
 
-exports.prototype.refresh = function() {
+Instance.prototype.refresh = function() {
 	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
 	if (this.backgroundData) {
 		this.context.putImageData(this.backgroundData,0,0);
@@ -49,7 +51,7 @@ exports.prototype.refresh = function() {
 	this.activeScene.draw(this.context, {from: this.backgroundObject});
 };
 
-exports.prototype.fastrefresh = function() {
+Instance.prototype.fastrefresh = function() {
 	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
 	if (this.backgroundData) {
 		this.context.putImageData(this.backgroundData,0,0);
@@ -57,7 +59,7 @@ exports.prototype.fastrefresh = function() {
 	this.activeScene.draw(this.context, {from: this.backgroundObject, fast: true});
 };
 
-exports.prototype.lockbackground = function(obj, useCurrent) {
+Instance.prototype.lockbackground = function(obj, useCurrent) {
 	if (useCurrent) {
 		this.backgroundData = this.context.getImageData(0,0,this.canvas.width,this.canvas.height);
 		this.backgroundObject = obj;
@@ -74,7 +76,7 @@ exports.prototype.lockbackground = function(obj, useCurrent) {
 	this.refresh();
 }
 
-exports.prototype.on = function(ev, cb) {
+Instance.prototype.on = function(ev, cb) {
 	if (this.listeners[ev]) {
 		this.listeners[ev].push(cb);
 	} else {
@@ -82,18 +84,18 @@ exports.prototype.on = function(ev, cb) {
 	}
 };
 
-exports.prototype.emit = function(ev, p) {
+Instance.prototype.emit = function(ev, p) {
 	if (!this.listeners[ev]) return;
 	for (var i=0; i<this.listeners[ev].length; i++) {
 		this.listeners[ev][i](p);
 	}
 };
 
-exports.prototype.json = function() {
+Instance.prototype.json = function() {
 	return JSON.stringify(this.activeScene.json());
 };
 
-exports.prototype.enums = {
+Instance.prototype.enums = {
 	'globalCompositeOperation': [
 		'source-over',
 		'source-in',

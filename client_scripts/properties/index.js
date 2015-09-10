@@ -23,10 +23,9 @@ exports.init = function() {
 		appdata.tfplay.refresh();
 	});
 	propertiesLayout.on('click', function(e) {
-		colorPicker();
+		colorPicker(p[e.data]);
 	});
 	propertiesLayout.on('context', function(e) {
-		console.log(e);
 		formulaBuilder();
 	});
 }

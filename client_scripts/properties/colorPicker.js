@@ -10,6 +10,18 @@ var leftPos = [0,0];
 var rightPos = 0;
 var scale = 1;
 
+var color = null;
+
+var stops = [
+	[255,0,0],
+	[255,0,255],
+	[0,0,255],
+	[0,255,255],
+	[0,255,0],
+	[255,255,0],
+	[255,0,0]
+];
+
 (function() {
 	dom.on(document.body, 'mousemove', mousemove);
 	dom.on(document.body, 'mouseup', mouseup);
@@ -19,7 +31,8 @@ function clamp(x, a, b) {
 	return Math.max(a, Math.min(x, b))
 }
 
-module.exports = function() {
+module.exports = function(c) {
+	color = c;
 	propertiesList.innerHTML = '';
 	canvas = dom.create('canvas', {width: propertiesList.offsetWidth, height: propertiesList.offsetHeight, parent: propertiesList});
 	ctx = canvas.getContext('2d');
@@ -78,6 +91,14 @@ function position(e) {
 		rightPos = pos[1];
 		rightPos = clamp(rightPos, 0, 255);
 	}
+
+	var t = Math.floor(6*(rightPos/256));
+	var p = (rightPos - (t*256/6)) / (256/6);
+	console.log(t);
+	color.red = Math.floor((stops[t][0]*(1-p)) + (stops[t+1][0]*p));
+	color.green = Math.floor((stops[t][1]*(1-p)) + (stops[t+1][1]*p));
+	color.blue = Math.floor((stops[t][2]*(1-p)) + (stops[t+1][2]*p));
+
 	refresh();
 }
 
