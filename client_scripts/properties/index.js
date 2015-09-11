@@ -23,7 +23,14 @@ exports.init = function() {
 		appdata.tfplay.refresh();
 	});
 	propertiesLayout.on('click', function(e) {
-		colorPicker(p[e.data]);
+		console.log(e.data);
+		var prop = p[e.data];
+		if (prop.type === 'color') {
+			colorPicker(prop);
+		} else {
+			p = prop;
+			props();
+		}
 	});
 	propertiesLayout.on('context', function(e) {
 		formulaBuilder();
@@ -44,23 +51,14 @@ exports.viewTool = function() {
 
 function props() {
 	var rows = [];
-	for (var e in p) {
-		var inp = null;
-		if (typeof(p[e]) === 'number') {
-			inp = {'type': 'input', 'subtype': 'number', 'name': e, 'value': p[e], 'onchange': true};
-		} else if (appdata.tfplay.enums[e]) {
-			inp = {'type': 'input', 'subtype': 'dropdown', 'options': appdata.tfplay.enums[e], 'name': e, 'value': p[e], 'onchange': true};
-		} else if (typeof(p[e]) === 'string') {
-			inp = {'type': 'input', 'subtype': 'text', 'name': e, 'value': p[e], 'onchange': true};
-		} else {
-			var el = p[e];
-			if (el.toString) el = el.toString();
-			inp = {'type': 'column', 'html': el, 'onclick': e};
+	if (!p.length) {
+		for (var e in p) {
+			addRow(rows, e);
 		}
-		rows.push({'type': 'row', 'contents': [
-			{'type': 'text', 'value': e},
-			inp
-		]});
+	} else {
+		for (var i=0; i<p.length; i++) {
+			addRow(rows, i);
+		}
 	}
 
 	propertiesList.innerHTML = '';
@@ -70,4 +68,23 @@ function props() {
 		]},
 		{'type': 'group', 'contents': rows, 'oncontext': ['Formula']}
 	]);
+}
+
+function addRow(rows, e) {
+	var inp = null;
+	if (typeof(p[e]) === 'number') {
+		inp = {'type': 'input', 'subtype': 'number', 'name': e, 'value': p[e], 'onchange': true};
+	} else if (appdata.tfplay.enums[e]) {
+		inp = {'type': 'input', 'subtype': 'dropdown', 'options': appdata.tfplay.enums[e], 'name': e, 'value': p[e], 'onchange': true};
+	} else if (typeof(p[e]) === 'string') {
+		inp = {'type': 'input', 'subtype': 'text', 'name': e, 'value': p[e], 'onchange': true};
+	} else {
+		var el = p[e];
+		if (el.toString) el = el.toString();
+		inp = {'type': 'column', 'html': el, 'onclick': e};
+	}
+	rows.push({'type': 'row', 'contents': [
+		{'type': 'text', 'value': e},
+		inp
+	]});
 }

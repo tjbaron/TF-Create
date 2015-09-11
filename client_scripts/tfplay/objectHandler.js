@@ -44,8 +44,9 @@ exports.prototype.draw = function(ctx, props) {
 		return;
 	}
 	ctx.save();
+	ctx.translate(this.properties.position[0], this.properties.position[1]);
+	ctx.rotate((this.properties.rotation/180)*Math.PI);
 	ctx.scale(this.properties.scale[0], this.properties.scale[1]);
-	ctx.translate(this.properties.rotation, 0);
 	for (var e in this.properties) {
 		var p = this.properties[e];
 		if (ctx[e] && typeof(ctx[e]) !== 'function') {

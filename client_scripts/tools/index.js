@@ -165,10 +165,10 @@ function move(e) {
 }
 
 function up(e) {
-	isDown = false;
-	if (d.activeTool.onup) {
+	if (isDown && d.activeTool.onup) {
 		d.activeTool.onup(e);
 	}
+	isDown = false;
 }
 
 function keyup(e) {

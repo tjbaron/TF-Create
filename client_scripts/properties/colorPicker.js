@@ -1,6 +1,7 @@
 
 var dom = require('tfdom');
 var tfmouseposition = require('../tfmouseposition');
+var d = require('../appdata');
 
 var canvas = null;
 var ctx = null;
@@ -94,7 +95,6 @@ function position(e) {
 
 	var t = Math.floor(6*(rightPos/256));
 	var p = (rightPos - (t*256/6)) / (256/6);
-	console.log(t);
 	color.red = Math.floor((stops[t][0]*(1-p)) + (stops[t+1][0]*p));
 	color.green = Math.floor((stops[t][1]*(1-p)) + (stops[t+1][1]*p));
 	color.blue = Math.floor((stops[t][2]*(1-p)) + (stops[t+1][2]*p));
@@ -110,8 +110,10 @@ function mousedown(e) {
 function mousemove(e) {
 	if (!isDown) return;
 	position(e);
+	d.tfplay.fastrefresh();
 }
 
 function mouseup(e) {
 	isDown = false;
+	d.tfplay.refresh();
 }
