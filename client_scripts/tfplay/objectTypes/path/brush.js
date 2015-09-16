@@ -58,6 +58,8 @@ module.exports = function(ctx) {
 	var gl = this.gl;
 	var shaderProgram = setupShader(gl, p.length);//this.shaderProgram;
 
+	gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+
 	// Pass data to vertex shader.
 
 	var resolutionLocation = gl.getUniformLocation(shaderProgram, "u_resolution");
@@ -67,10 +69,22 @@ module.exports = function(ctx) {
 
 	var pointsLocation = gl.getUniformLocation(shaderProgram, "u_points[0]");
 	var flat = [];
+	var xRange = [resolution[0],0];
+	var yRange = [resolution[1],0];
 	for (var i=0; i<p.length; i++) {
-		flat.push(p[i][0]/zoom);
-		flat.push(resolution[1]-(p[i][1]/zoom));
+		var x = p[i][0]/zoom;
+		var y = (p[i][1]/zoom);
+		flat.push(x);
+		flat.push(resolution[1]-y);
+		if (xRange[0] > x) xRange[0] = x;
+		if (xRange[1] < x) xRange[1] = x;
+		if (yRange[0] > y) yRange[0] = y;
+		if (yRange[1] < y) yRange[1] = y;
 	}
+	xRange[0] -= 20;
+	xRange[1] += 20;
+	yRange[0] -= 20;
+	yRange[1] += 20;
 	gl.uniform1fv(pointsLocation, flat);
 
 	var colorLocation = gl.getUniformLocation(shaderProgram, "u_color");
@@ -85,12 +99,12 @@ module.exports = function(ctx) {
 	gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-		0, 0,
-		resolution[0], 0,
-		0, resolution[1],
-		0, resolution[1],
-		resolution[0], 0,
-		resolution[0], resolution[1]]), gl.STATIC_DRAW);
+		xRange[1], yRange[0],
+		xRange[0], yRange[0],
+		xRange[1], yRange[1],
+		xRange[1], yRange[1],
+		xRange[0], yRange[0],
+		xRange[0], yRange[1]]), gl.STATIC_DRAW);
 
 	gl.drawArrays(gl.TRIANGLES, 0, 6);
 
