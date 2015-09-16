@@ -12,6 +12,7 @@ var rightPos = 0;
 var scale = 1;
 
 var color = null;
+var rainbow = [255,0,0];
 
 var stops = [
 	[255,0,0],
@@ -61,7 +62,7 @@ function refresh() {
 
 	grd = ctx.createLinearGradient(30,0,286,0);
 	grd.addColorStop(0,"rgba(255,255,255,1)");
-	grd.addColorStop(1,"rgba(0,0,255,1)");
+	grd.addColorStop(1,"rgba("+rainbow[0]+','+rainbow[1]+','+rainbow[2]+",1)");
 	ctx.fillStyle = grd;
 	ctx.fillRect(30,0,256,256);
 	
@@ -98,6 +99,15 @@ function position(e) {
 	color.red = Math.floor((stops[t][0]*(1-p)) + (stops[t+1][0]*p));
 	color.green = Math.floor((stops[t][1]*(1-p)) + (stops[t+1][1]*p));
 	color.blue = Math.floor((stops[t][2]*(1-p)) + (stops[t+1][2]*p));
+	rainbow = [color.red, color.green, color.blue];
+
+	color.red += (255-color.red) * (1-(leftPos[0]/255));
+	color.green += (255-color.green) * (1-(leftPos[0]/255));
+	color.blue += (255-color.blue) * (1-(leftPos[0]/255));
+
+	color.red = Math.floor(color.red*(1-(leftPos[1]/255)));
+	color.green = Math.floor(color.green*(1-(leftPos[1]/255)));
+	color.blue = Math.floor(color.blue*(1-(leftPos[1]/255)));
 
 	refresh();
 }
@@ -110,7 +120,7 @@ function mousedown(e) {
 function mousemove(e) {
 	if (!isDown) return;
 	position(e);
-	d.tfplay.fastrefresh();
+	d.tfplay.refresh();
 }
 
 function mouseup(e) {
