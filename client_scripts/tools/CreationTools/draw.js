@@ -9,7 +9,8 @@ exports.name = 'Draw';
 exports.properties = {
 	lineColor: new tfplay.properties.Color(),
 	lineWidth: 10,
-	minPointDistance: 5
+	minPointDistance: 5,
+	fastRefresh: 'enabled'
 };
 
 exports.ondown = function() {
@@ -29,7 +30,8 @@ exports.onmove = function(e) {
 			if (dist < exports.properties.minPointDistance) return;
 		}
 		pnts.push(newPos);
-		d.tfplay.fastrefresh();
+		if (exports.properties.fastRefresh === 'enabled') d.tfplay.fastrefresh();
+		else d.tfplay.refresh();
 	}
 }
 

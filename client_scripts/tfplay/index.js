@@ -30,8 +30,10 @@ var Instance = exports.Instance = function(container) {
 	});
 	this.utils.ctx = this.utils.canvas.getContext('2d');
 	this.utils.glcanvas = dom.create('canvas', {
+		//style: 'position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;',
 		width: canvas.width,
-		height: canvas.height
+		height: canvas.height,
+		//parent: container
 	});
 	this.utils.gl = this.utils.glcanvas.getContext('webgl') || this.utils.glcanvas.getContext('experimental-webgl');
 }
@@ -140,5 +142,9 @@ Instance.prototype.enums = {
 	'falloffType': [
 		'path',
 		'direct'
+	],
+	'fastRefresh': [
+		'enabled',
+		'disabled'
 	]
 };
