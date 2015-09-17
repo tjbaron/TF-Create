@@ -128,6 +128,7 @@ Instance.prototype.enums = {
 		'luminosity'
 	],
 	'lineRenderer': [
+		'poly',
 		'brush',
 		'pencil'
 	],

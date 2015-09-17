@@ -4,7 +4,8 @@ var properties = require('../../properties');
 
 var renderers = {
 	pencil: require('./path'),
-	brush: require('./brush')
+	brush: require('./brush'),
+	poly: require('./poly')
 };
 
 exports.setup = function(utils) {
@@ -13,7 +14,7 @@ exports.setup = function(utils) {
 	p.points = [];
 	p.lineColor = new properties.Color();
 	p.fillColor = new properties.Color(0,0,0,0.0);
-	p.lineRenderer = 'brush';
+	p.lineRenderer = 'poly';
 
 	this.glcanvas = utils.glcanvas;
 	this.gl = utils.gl;
