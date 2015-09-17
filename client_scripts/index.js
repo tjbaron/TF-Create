@@ -39,6 +39,9 @@ window.onload = function() {
 		}
 	}
 
+	document.body.addEventListener('touchmove', function(e) {
+		e.preventDefault();
+	});
 	document.body.addEventListener('dragover', cancel);
     document.body.addEventListener('dragenter', cancel);
 	document.body.addEventListener('drop', function(e) {

@@ -147,9 +147,9 @@ exports.init = function() {
 
 	toolsLayout.build(c);
 
-	d.tfplay.container.onmousedown = down;
-	document.body.onmousemove = move;
-	document.body.onmouseup = up;
+	d.tfplay.container.onmousedown = d.tfplay.container.ontouchstart = down;
+	document.body.onmousemove = document.body.ontouchmove = move;
+	document.body.onmouseup = document.body.ontouchend = up;
 	document.body.onkeyup = keyup;
 }
 

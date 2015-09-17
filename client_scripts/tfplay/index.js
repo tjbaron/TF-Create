@@ -35,7 +35,8 @@ var Instance = exports.Instance = function(container) {
 		height: canvas.height,
 		//parent: container
 	});
-	this.utils.gl = this.utils.glcanvas.getContext('webgl') || this.utils.glcanvas.getContext('experimental-webgl');
+	var gl = this.utils.gl = this.utils.glcanvas.getContext('webgl') || this.utils.glcanvas.getContext('experimental-webgl');
+	//alert(gl.getParameter(gl.MAX_FRAGMENT_UNIFORM_VECTORS));
 }
 
 Instance.prototype.createObject = function(type, props) {

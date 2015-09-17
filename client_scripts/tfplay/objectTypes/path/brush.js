@@ -13,7 +13,7 @@ var fragSrc = '\
 precision mediump float;\
 \
 uniform vec4 u_color;\
-uniform float u_points[{{pointCount}}];\
+{{definePointUniforms}}\
 \
 float sqr(float x) { return x * x; }\
 float dist2(vec2 v, vec2 w) { return sqr(v[0] - w[0]) + sqr(v[1] - w[1]); }\
@@ -35,10 +35,7 @@ float distToSegment(vec2 p, vec2 v, vec2 w) { return sqrt(distToSegmentSquared(p
 \
 void main() {\
 	float dist = 999999.0;\
-	for (int i=2; i<{{pointCount2}}; i+=2) {\
-		float newDist = distToSegment(vec2(gl_FragCoord.x,gl_FragCoord.y), vec2(u_points[i-2],u_points[i-1]), vec2(u_points[i],u_points[i+1]));\
-		if (newDist < dist) dist = newDist;\
-	}\
+	{{pointLoops}}\
 	if (dist<10.0) {\
 		gl_FragColor = vec4(u_color.xyz,1.0-(dist/10.0));\
 	} else if (dist<20.0) {\
@@ -56,7 +53,9 @@ module.exports = function(ctx) {
 	var resolution = [this.glcanvas.width, this.glcanvas.height];
 	var zoom = 0.5;
 	var gl = this.gl;
-	var shaderProgram = setupShader(gl, p.length);//this.shaderProgram;
+
+	var uniCount = Math.ceil(p.length/32);
+	var shaderProgram = setupShader(gl, uniCount);//this.shaderProgram;
 
 	gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
 
@@ -67,25 +66,32 @@ module.exports = function(ctx) {
 
 	// Pass data to fragment shader.
 
-	var pointsLocation = gl.getUniformLocation(shaderProgram, "u_points[0]");
-	var flat = [];
 	var xRange = [resolution[0],0];
 	var yRange = [resolution[1],0];
-	for (var i=0; i<p.length; i++) {
-		var x = p[i][0]/zoom;
-		var y = (p[i][1]/zoom);
-		flat.push(x);
-		flat.push(resolution[1]-y);
-		if (xRange[0] > x) xRange[0] = x;
-		if (xRange[1] < x) xRange[1] = x;
-		if (yRange[0] > y) yRange[0] = y;
-		if (yRange[1] < y) yRange[1] = y;
+	for (var j=0; j<uniCount; j++) {
+		var pointsLocation = gl.getUniformLocation(shaderProgram, 'u_points'+j+'[0]');
+		var flat = [];
+		for (var i=0; i<32; i++) {
+			var loc = (j*32) + i;
+			var x = 0;
+			var y = 0;
+			if (loc<p.length) {
+				x = p[loc][0]/zoom;
+				y = (p[loc][1]/zoom);
+			}
+			flat.push(x);
+			flat.push(resolution[1]-y);
+			if (xRange[0] > x) xRange[0] = x;
+			if (xRange[1] < x) xRange[1] = x;
+			if (yRange[0] > y) yRange[0] = y;
+			if (yRange[1] < y) yRange[1] = y;
+		}
+		gl.uniform1fv(pointsLocation, flat);
 	}
 	xRange[0] -= 20;
 	xRange[1] += 20;
 	yRange[0] -= 20;
 	yRange[1] += 20;
-	gl.uniform1fv(pointsLocation, flat);
 
 	var colorLocation = gl.getUniformLocation(shaderProgram, "u_color");
 	gl.uniform4fv(colorLocation, [lc.red/255,lc.green/255,lc.blue/255,lc.alpha]);
@@ -117,10 +123,22 @@ module.exports = function(ctx) {
 	ctx.restore();
 }
 
-function setupShader(gl, pnts) {
+function setupShader(gl, uniCount) {
+	var pointUniforms = '';
+	var pointLoops = '';
+
+	for (var i=0; i<uniCount; i++) {
+		pointUniforms += 'uniform float u_points'+i+'[64];';
+		pointLoops += '\
+			for (int i=2; i<64; i+=2) {\
+				float newDist = distToSegment(vec2(gl_FragCoord.x,gl_FragCoord.y), vec2(u_points'+i+'[i-2],u_points'+i+'[i-1]), vec2(u_points'+i+'[i],u_points'+i+'[i+1]));\
+				if (newDist < dist) dist = newDist;\
+			}';
+	}
+
 	var fragSrcGood = fragSrc
-		.replace('{{pointCount}}', pnts*2)
-		.replace('{{pointCount2}}', pnts*2);
+		.replace('{{definePointUniforms}}', pointUniforms)
+		.replace('{{pointLoops}}', pointLoops);
 
 	var frag = gl.createShader(gl.FRAGMENT_SHADER);
 	gl.shaderSource(frag, fragSrcGood);

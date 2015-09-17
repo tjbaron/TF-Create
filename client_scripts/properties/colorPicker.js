@@ -27,6 +27,8 @@ var stops = [
 (function() {
 	dom.on(document.body, 'mousemove', mousemove);
 	dom.on(document.body, 'mouseup', mouseup);
+	dom.on(document.body, 'touchmove', mousemove);
+	dom.on(document.body, 'touchend', mouseup);
 })();
 
 function clamp(x, a, b) {
@@ -36,9 +38,10 @@ function clamp(x, a, b) {
 module.exports = function(c) {
 	color = c;
 	propertiesList.innerHTML = '';
+	propertiesList.ontouchmove = null;
 	canvas = dom.create('canvas', {width: propertiesList.offsetWidth, height: propertiesList.offsetHeight, parent: propertiesList});
 	ctx = canvas.getContext('2d');
-	canvas.onmousedown = mousedown;
+	canvas.onmousedown = canvas.ontouchstart = mousedown;
 
 	refresh();
 };
