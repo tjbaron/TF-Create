@@ -21,9 +21,9 @@ exports.setup = function(utils) {
 }
 
 exports.draw = function(ctx, fast) {
-	if (fast) {
+/*	if (fast) {
 		renderers.pencil.call(this, ctx);
-	} else {
+	} else {*/
 		renderers[this.properties.lineRenderer].call(this, ctx);
-	}
+	// }
 }

@@ -1,9 +1,9 @@
 
 var kernel = require('./kernel');
 
-exports.setup = function() {
+exports.setup = function(utils) {
 	this.kernel = {properties:{alpha: true}};
-	kernel.setup.call(this.kernel);
+	kernel.setup.call(this.kernel, utils);
 
 	this.radius = 5;
 	this.kernel.properties.kernel = setMatrix(this.radius);

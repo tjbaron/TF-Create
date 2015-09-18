@@ -1,9 +1,9 @@
 
 var kernel = require('./kernel');
 
-exports.setup = function() {
+exports.setup = function(utils) {
 	this.kernel = {properties:{}};
-	kernel.setup.call(this.kernel);
+	kernel.setup.call(this.kernel, utils);
 }
 
 exports.draw = function(ctx, fast) {

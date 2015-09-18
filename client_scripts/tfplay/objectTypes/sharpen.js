@@ -1,9 +1,9 @@
 
 var kernel = require('./kernel');
 
-exports.setup = function() {
+exports.setup = function(utils) {
 	this.kernel = {properties:{}};
-	kernel.setup.call(this.kernel);
+	kernel.setup.call(this.kernel, utils);
 	this.kernel.properties.kernel = [-1,-1,-1,-1,9,-1,-1,-1,-1];
 	this.kernel.properties.scale = 1.0;
 }

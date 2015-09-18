@@ -34,17 +34,15 @@ void main() {\
 var withAlpha = '(colorSum / u_kernelWeight).rgba';
 var withoutAlpha = 'vec4((colorSum / u_kernelWeight).rgb, texture2D(u_image, v_texCoord + onePixel * vec2(0,0)).a)';
 
-exports.setup = function() {
+exports.setup = function(utils) {
 	this.properties.scale = 0.5;
 	this.properties.offset = 0.0;
 	if (this.properties.alpha === undefined) this.properties.alpha = false;
-	
+
 	var canvas = document.getElementById('canvas');
-	this.glcanvas = dom.create('canvas', {
-		'width': canvas.width,
-		'height': canvas.height
-	});
-	this.gl = this.glcanvas.getContext('webgl') || this.glcanvas.getContext('experimental-webgl');
+	console.log(utils);
+	this.glcanvas = utils.glcanvas;
+	this.gl = utils.gl;
 
 	this.kernel = [-1,-1,-1,-1,8,-1,-1,-1,-1];
 	this.shaderProgram = setupShader(this.gl, this.kernel.length, this.properties.alpha);
@@ -90,17 +88,16 @@ function setupShader(gl, matrixSize, alpha) {
 	gl.attachShader(shaderProgram, vert);
 	gl.attachShader(shaderProgram, frag);
 	gl.linkProgram(shaderProgram);
-	gl.useProgram(shaderProgram);
 	return shaderProgram;
 }
 
 exports.draw = function(ctx, fast) {
-	if (fast) return;
+	//if (fast) return;
 
-	var canvas = document.getElementById('canvas');
 	var resolution = this.resolution;
 	var gl = this.gl;
 	var shaderProgram = this.shaderProgram;
+	gl.useProgram(shaderProgram);
 
 	var texture = gl.createTexture();
 	gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -108,17 +105,17 @@ exports.draw = function(ctx, fast) {
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.glcanvas);
 
 	var texCoordBuffer = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+		0,0,
+		1,0,
 		0,1,
-		1,1,
-		0,0,
-		0,0,
-		1,1,
-		1,0]), gl.STATIC_DRAW);
+		0,1,
+		1,0,
+		1,1]), gl.STATIC_DRAW);
 
 	var texCoordLocation = gl.getAttribLocation(shaderProgram, "a_texCoord");
 	gl.enableVertexAttribArray(texCoordLocation);
@@ -157,10 +154,4 @@ exports.draw = function(ctx, fast) {
 		resolution[0], resolution[1]]), gl.STATIC_DRAW);
 
 	gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-	// Copy data to 2D canvas.
-
-	var data = new Uint8Array(canvas.width * canvas.height * 4);
-	gl.readPixels(0, 0, canvas.width, canvas.height, gl.RGBA, gl.UNSIGNED_BYTE, data);
-	ctx.putImageData(new ImageData(new Uint8ClampedArray(data), canvas.width, canvas.height), 0, 0);
 }
