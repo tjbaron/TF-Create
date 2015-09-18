@@ -58,10 +58,57 @@ module.exports = function(ctx) {
 	var gl = this.gl;
 	var shaderProgram = setupShader(gl, p.length);//this.shaderProgram;
 
+	/*gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+	gl.enable(gl.BLEND);*/
+
 	// Pass data to vertex shader.
 
 	var resolutionLocation = gl.getUniformLocation(shaderProgram, "u_resolution");
 	gl.uniform2f(resolutionLocation, resolution[0], resolution[1]);
+
+	// Setup polygons
+	var r = 20;
+	var p6 = Math.PI/24;
+	// Pass data to fragment shader.
+	var points = [];
+	var x1, x2, y1, y2, xn1, yn1;
+	for (var i=0; i<p.length; i++) {
+		x1 = x2;
+		y1 = y2;
+		x2 = p[i][0]/zoom;
+		y2 = (p[i][1]/zoom);
+		if (x1 != null) {
+			// figure normals...
+			xn1 = y2-y1;
+			yn1 = x1-x2;
+			var length = Math.sqrt(xn1*xn1 + yn1*yn1);
+			xn1 /= (length/20);
+			yn1 /= (length/20);
+			points.push(x1);		points.push(y1);
+			points.push(x2);		points.push(y2);
+			points.push(x2+xn1);	points.push(y2+yn1);
+			points.push(x1);		points.push(y1);
+			points.push(x1+xn1);	points.push(y1+yn1);
+			points.push(x2+xn1);	points.push(y2+yn1);
+
+			points.push(x1);		points.push(y1);
+			points.push(x2);		points.push(y2);
+			points.push(x2-xn1);	points.push(y2-yn1);
+			points.push(x1);		points.push(y1);
+			points.push(x1-xn1);	points.push(y1-yn1);
+			points.push(x2-xn1);	points.push(y2-yn1);
+		}
+		for (var j=0; j<48; j++) {
+			var a = j*p6;
+			var xa = x2 + r * Math.cos(a);
+			var ya = y2 + r * Math.sin(a);
+			var xb = x2 + r * Math.cos(a+p6);
+			var yb = y2 + r * Math.sin(a+p6);
+			points.push(x2);	points.push(y2);
+			points.push(xa);	points.push(ya);
+			points.push(xb);	points.push(yb);
+		}
+	}
 
 	// Pass data to fragment shader.
 
@@ -96,15 +143,8 @@ module.exports = function(ctx) {
 	gl.enableVertexAttribArray(positionLocation);
 	gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-		xRange[1], yRange[0],
-		xRange[0], yRange[0],
-		xRange[1], yRange[1],
-		xRange[1], yRange[1],
-		xRange[0], yRange[0],
-		xRange[0], yRange[1]]), gl.STATIC_DRAW);
-
-	gl.drawArrays(gl.TRIANGLES, 0, 6);
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(points), gl.STATIC_DRAW);
+	gl.drawArrays(gl.TRIANGLES, 0, points.length/2);
 }
 
 function setupShader(gl, pnts) {

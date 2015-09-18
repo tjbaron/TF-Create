@@ -19,7 +19,8 @@ void main() {\
 }\
 ';
 
-module.exports = function(ctx) {
+module.exports = function(ctx, fast) {
+	var circleSegments = fast ? 10 : 24;
 	var p = this.properties.points;
 	if (p.length < 2) return;
 	var lc = this.properties.lineColor;
@@ -35,51 +36,43 @@ module.exports = function(ctx) {
 	gl.uniform2f(resolutionLocation, resolution[0], resolution[1]);
 
 	var r = 20;
-	var p6 = Math.PI/24;
+	var p6 = Math.PI/(circleSegments/2);
 	// Pass data to fragment shader.
 	var points = [];
-	var x1, x2, x3, y1, y2, y3, xn1, yn1, xn2, yn2;
+	var x1, x2, y1, y2, xn1, yn1;
 	for (var i=0; i<p.length; i++) {
-		x1 = x2; x2 = x3;
-		y1 = y2; y2 = y3;
-		x3 = p[i][0]/zoom;
-		y3 = (p[i][1]/zoom);
+		x1 = x2;
+		y1 = y2;
+		x2 = p[i][0]/zoom;
+		y2 = (p[i][1]/zoom);
 		if (x1 != null) {
 			// figure normals...
-			xn1 = xn2; yn1 = yn2;
-			xn2 = y3-y1;
-			yn2 = x1-x3;
-			var length = Math.sqrt(xn2*xn2 + yn2*yn2);
-			xn2 /= (length/20);
-			yn2 /= (length/20);
-			if (xn1 === undefined) {
-				xn1 = y2-y1;
-				yn1 = x1-x2;
-				var length2 = Math.sqrt(xn1*xn1 + yn1*yn1);
-				xn1 /= (length2/20);
-				yn1 /= (length2/20);
-			}
+			xn1 = y2-y1;
+			yn1 = x1-x2;
+			var length = Math.sqrt(xn1*xn1 + yn1*yn1);
+			xn1 /= (length/20);
+			yn1 /= (length/20);
 			points.push(x1);		points.push(y1);
 			points.push(x2);		points.push(y2);
-			points.push(x2+xn2);	points.push(y2+yn2);
+			points.push(x2+xn1);	points.push(y2+yn1);
 			points.push(x1);		points.push(y1);
 			points.push(x1+xn1);	points.push(y1+yn1);
-			points.push(x2+xn2);	points.push(y2+yn2);
+			points.push(x2+xn1);	points.push(y2+yn1);
 
 			points.push(x1);		points.push(y1);
 			points.push(x2);		points.push(y2);
-			points.push(x2-xn2);	points.push(y2-yn2);
+			points.push(x2-xn1);	points.push(y2-yn1);
 			points.push(x1);		points.push(y1);
 			points.push(x1-xn1);	points.push(y1-yn1);
-			points.push(x2-xn2);	points.push(y2-yn2);
+			points.push(x2-xn1);	points.push(y2-yn1);
 		}
-		for (var j=0; j<48; j++) {
+		for (var j=0; j<circleSegments; j++) {
 			var a = j*p6;
-			var xa = x3 + r * Math.cos(a);
-			var ya = y3 + r * Math.sin(a);
-			var xb = x3 + r * Math.cos(a+p6);
-			var yb = y3 + r * Math.sin(a+p6);
-			points.push(x3);	points.push(y3);
+			var xa = x2 + r * Math.cos(a);
+			var ya = y2 + r * Math.sin(a);
+			var xb = x2 + r * Math.cos(a+p6);
+			var yb = y2 + r * Math.sin(a+p6);
+			points.push(x2);	points.push(y2);
 			points.push(xa);	points.push(ya);
 			points.push(xb);	points.push(yb);
 		}

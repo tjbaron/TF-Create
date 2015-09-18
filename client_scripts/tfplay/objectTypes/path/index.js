@@ -24,6 +24,6 @@ exports.draw = function(ctx, fast) {
 /*	if (fast) {
 		renderers.pencil.call(this, ctx);
 	} else {*/
-		renderers[this.properties.lineRenderer].call(this, ctx);
+		renderers[this.properties.lineRenderer].call(this, ctx, fast);
 	// }
 }

@@ -55,7 +55,7 @@ Instance.prototype.refresh = function() {
 	if (this.backgroundData) {
 		this.context.putImageData(this.backgroundData,0,0);
 	}
-	this.activeScene.draw(this.context, {from: this.backgroundObject});
+	this.activeScene.draw(this.context, {});//, {from: this.backgroundObject});
 };
 
 Instance.prototype.fastrefresh = function() {
@@ -67,7 +67,7 @@ Instance.prototype.fastrefresh = function() {
 	if (this.backgroundData) {
 		this.context.putImageData(this.backgroundData,0,0);
 	}
-	this.activeScene.draw(this.context, {from: this.backgroundObject, fast: true});
+	this.activeScene.draw(this.context, {fast: true});//, {from: this.backgroundObject, fast: true});
 };
 
 Instance.prototype.lockbackground = function(obj, useCurrent) {
