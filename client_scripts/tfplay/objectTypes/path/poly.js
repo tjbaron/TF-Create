@@ -29,9 +29,6 @@ module.exports = function(ctx) {
 	var gl = this.gl;
 	var shaderProgram = setupShader(gl, p.length);
 
-	gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
-	//gl.disable(gl.CULL_FACE)
-
 	// Pass data to vertex shader.
 
 	var resolutionLocation = gl.getUniformLocation(shaderProgram, "u_resolution");
@@ -51,8 +48,8 @@ module.exports = function(ctx) {
 			xn2 = y3-y1;
 			yn2 = x1-x3;
 			var length = Math.sqrt(xn2*xn2 + yn2*yn2);
-			xn2 /= (length/10);
-			yn2 /= (length/10);
+			xn2 /= (length/20);
+			yn2 /= (length/20);
 			if (xn1 != null) {
 				points.push(x1);
 				points.push(y1);
@@ -62,7 +59,7 @@ module.exports = function(ctx) {
 				points.push(y2+yn2);
 				points.push(x1);
 				points.push(y1);
-				points.push(x1+yn2);
+				points.push(x1+xn1);
 				points.push(y1+yn1);
 				points.push(x2+xn2);
 				points.push(y2+yn2);
@@ -84,14 +81,6 @@ module.exports = function(ctx) {
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(points), gl.STATIC_DRAW);
 
 	gl.drawArrays(gl.TRIANGLES, 0, points.length/2);
-
-	// Copy data to 2D canvas.
-
-	ctx.save();
-	ctx.scale(1/window.devicePixelRatio,1/window.devicePixelRatio);
-	ctx.globalCompositeOperation = 'source-over';
-	ctx.drawImage(gl.canvas, 0, 0);
-	ctx.restore();
 }
 
 function setupShader(gl, pnts) {

@@ -58,8 +58,6 @@ module.exports = function(ctx) {
 	var gl = this.gl;
 	var shaderProgram = setupShader(gl, p.length);//this.shaderProgram;
 
-	gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
-
 	// Pass data to vertex shader.
 
 	var resolutionLocation = gl.getUniformLocation(shaderProgram, "u_resolution");
@@ -107,14 +105,6 @@ module.exports = function(ctx) {
 		xRange[0], yRange[1]]), gl.STATIC_DRAW);
 
 	gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-	// Copy data to 2D canvas.
-
-	ctx.save();
-	ctx.scale(1/window.devicePixelRatio,1/window.devicePixelRatio);
-	ctx.globalCompositeOperation = 'source-over';
-	ctx.drawImage(gl.canvas, 0, 0);
-	ctx.restore();
 }
 
 function setupShader(gl, pnts) {

@@ -30,10 +30,10 @@ var Instance = exports.Instance = function(container) {
 	});
 	this.utils.ctx = this.utils.canvas.getContext('2d');
 	this.utils.glcanvas = dom.create('canvas', {
-		//style: 'position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;',
+		style: 'position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;',
 		width: canvas.width,
 		height: canvas.height,
-		//parent: container
+		parent: container
 	});
 	var gl = this.utils.gl = this.utils.glcanvas.getContext('webgl') || this.utils.glcanvas.getContext('experimental-webgl');
 	//alert(gl.getParameter(gl.MAX_FRAGMENT_UNIFORM_VECTORS));
@@ -48,6 +48,10 @@ Instance.prototype.createObject = function(type, props) {
 
 Instance.prototype.refresh = function() {
 	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+
+	var gl = this.utils.gl;
+	gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+	
 	if (this.backgroundData) {
 		this.context.putImageData(this.backgroundData,0,0);
 	}
@@ -56,6 +60,10 @@ Instance.prototype.refresh = function() {
 
 Instance.prototype.fastrefresh = function() {
 	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+	
+	var gl = this.utils.gl;
+	gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+
 	if (this.backgroundData) {
 		this.context.putImageData(this.backgroundData,0,0);
 	}
