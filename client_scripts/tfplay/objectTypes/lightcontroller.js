@@ -3,7 +3,6 @@ exports.setup = function(utils) {
 	var ObjH = require('../objectHandler');
 
 	this.path = new ObjH('path', null, utils);
-	this.path.properties.lineRenderer = 'pencil';
 	this.path.properties.width = '10';
 
 	this.properties.lightType = 'hue';

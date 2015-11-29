@@ -137,8 +137,7 @@ Instance.prototype.enums = {
 	],
 	'lineRenderer': [
 		'poly',
-		'brush',
-		'pencil'
+		'brush'
 	],
 	'playing': [
 		'true',

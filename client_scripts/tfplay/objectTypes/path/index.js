@@ -3,7 +3,6 @@ var dom = require('tfdom');
 var properties = require('../../properties');
 
 var renderers = {
-	pencil: require('./path'),
 	brush: require('./brush'),
 	poly: require('./poly')
 };
