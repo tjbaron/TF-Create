@@ -11,7 +11,8 @@
   },
   "scripts": {
     "start": "node index.js",
-    "test": "node tests/index.js"
+    "test": "node tests/index.js",
+    "watch": "watchify client_scripts/index.js -o www/bundle.js"
   },
   "dependencies": {
     "async": "^1.4.0",
